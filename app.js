@@ -452,23 +452,15 @@ Ajoute toujours cette note si la victime est blâmée :
 `;
 
     try {
-        const cleanKey = apiKey.trim();
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${cleanKey}`, {
+        // Appel au serveur Vercel (utilise la clé GEMINI_API_KEY définie dans Vercel)
+        const response = await fetch('/api/groq', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                contents: [{
-                    parts: [{ text: "MESSAGE À ANALYSER : " + prompt }]
-                }],
-                systemInstruction: {
-                    parts: [{ text: systemPrompt }]
-                },
-                generationConfig: {
-                    temperature: 0.7,
-                    maxOutputTokens: 8192
-                }
+                systemPrompt: systemPrompt,
+                userMessage: "MESSAGE À ANALYSER : " + prompt
             })
         });
 
@@ -480,7 +472,8 @@ Ajoute toujours cette note si la victime est blâmée :
             return null;
         }
 
-        return data.candidates?.[0]?.content?.parts?.[0]?.text || "Pas de réponse";
+        // Le serveur renvoie un format OpenAI-like
+        return data.choices?.[0]?.message?.content || "Pas de réponse";
     } catch (error) {
         console.error("API Fetch Error:", error);
         addMessage("<strong style='color:#ef4444;'>⚠️ ERREUR CONNEXION :</strong> " + error.message, "bot");
