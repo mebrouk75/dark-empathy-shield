@@ -452,19 +452,14 @@ Ajoute toujours cette note si la victime est blâmée :
 `;
 
     try {
-        const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+        const response = await fetch('/api/groq', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${apiKey}`
+                'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                model: 'llama-3.3-70b-versatile', // 131K context window!
-                messages: [
-                    { role: 'system', content: systemPrompt },
-                    { role: 'user', content: "MESSAGE À ANALYSER : " + prompt }
-                ],
-                temperature: 0.7
+                systemPrompt: systemPrompt,
+                userMessage: "MESSAGE À ANALYSER : " + prompt
             })
         });
 
