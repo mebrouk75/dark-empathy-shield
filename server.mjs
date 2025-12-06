@@ -19,58 +19,29 @@ const MIME_TYPES = {
   '.svg': 'image/svg+xml',
   '.ico': 'image/x-icon'
 };
+import express from 'express';
+import cors from 'cors';
+import { GoogleGenerativeAI } from '@google/generative-ai';
 
-function callGroqAPI(apiKey, systemPrompt, userMessage) {
-  return new Promise((resolve, reject) => {
-    const requestBody = JSON.stringify({
-      model: "llama-3.3-70b-versatile",
-      messages: [
-        { role: "system", content: systemPrompt },
-        { role: "user", content: userMessage }
-      ],
-      temperature: 0.7,
-      max_tokens: 1024
-    });
+const app = express();
+const PORT = process.env.PORT || 8000;
 
-    const options = {
-      hostname: 'api.groq.com',
-      port: 443,
-      path: '/openai/v1/chat/completions',
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiKey}`,
-        'Content-Length': Buffer.byteLength(requestBody)
-      }
-    };
+app.use(cors());
+app.use(express.json({ limit: '50mb' }));
+app.use(express.static('.'));
 
-    const req = httpsRequest(options, (res) => {
-      let data = '';
-      res.on('data', chunk => data += chunk);
-      res.on('end', () => {
-        try {
-          resolve(JSON.parse(data));
-        } catch (e) {
-          reject(new Error('Invalid JSON response'));
-        }
+// Initialize Gemini
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
+
+app.post('/api/groq', async (req, res) => {
+  try {
+    const { systemPrompt, userMessage } = req.body;
+
+    if (!process.env.GEMINI_API_KEY) {
+      return res.status(500).json({
+        error: { message: 'GEMINI_API_KEY not configured on server' }
       });
-    });
-
-    req.on('error', reject);
-    req.write(requestBody);
-    req.end();
-  });
-}
-
-const server = createServer(async (req, res) => {
-  // Enable CORS
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-
-  // Handle preflight
-  if (req.method === 'OPTIONS') {
-    res.writeHead(204);
+    }
     res.end();
     return;
   }
