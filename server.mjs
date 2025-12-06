@@ -1,4 +1,4 @@
-// server.mjs - HTTP Server with API Proxy (Node.js compatible)
+// server.mjs - Gemini API Proxy
 import { createServer } from 'node:http';
 import { request as httpsRequest } from 'node:https';
 import { readFileSync, existsSync } from 'node:fs';
@@ -19,41 +19,89 @@ const MIME_TYPES = {
   '.svg': 'image/svg+xml',
   '.ico': 'image/x-icon'
 };
-import express from 'express';
-import cors from 'cors';
-import { GoogleGenerativeAI } from '@google/generative-ai';
 
-const app = express();
-const PORT = process.env.PORT || 8000;
+function callGeminiAPI(apiKey, systemPrompt, userMessage) {
+  return new Promise((resolve, reject) => {
+    const requestBody = JSON.stringify({
+      contents: [{
+        parts: [{ text: userMessage }]
+      }],
+      systemInstruction: {
+        parts: [{ text: systemPrompt }]
+      },
+      generationConfig: {
+        temperature: 0.7,
+        maxOutputTokens: 8192
+      }
+    });
 
-app.use(cors());
-app.use(express.json({ limit: '50mb' }));
-app.use(express.static('.'));
+    const options = {
+      hostname: 'generativelanguage.googleapis.com',
+      port: 443,
+      path: `/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${apiKey}`,
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Content-Length': Buffer.byteLength(requestBody)
+      }
+    };
 
-// Initialize Gemini
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
-
-app.post('/api/groq', async (req, res) => {
-  try {
-    const { systemPrompt, userMessage } = req.body;
-
-    if (!process.env.GEMINI_API_KEY) {
-      return res.status(500).json({
-        error: { message: 'GEMINI_API_KEY not configured on server' }
+    const req = httpsRequest(options, (res) => {
+      let data = '';
+      res.on('data', chunk => data += chunk);
+      res.on('end', () => {
+        try {
+          const parsed = JSON.parse(data);
+          // Convert Gemini response to OpenAI-like format
+          const text = parsed.candidates?.[0]?.content?.parts?.[0]?.text || '';
+          resolve({
+            choices: [{
+              message: {
+                content: text
+              }
+            }]
+          });
+        } catch (e) {
+          reject(new Error('Invalid JSON response'));
+        }
       });
-    }
+    });
+
+    req.on('error', reject);
+    req.write(requestBody);
+    req.end();
+  });
+}
+
+const server = createServer(async (req, res) => {
+  // Enable CORS
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+
+  // Handle preflight
+  if (req.method === 'OPTIONS') {
+    res.writeHead(204);
     res.end();
     return;
   }
 
-  // API Proxy for Groq
+  // API Proxy for Gemini
   if (req.url === '/api/groq' && req.method === 'POST') {
     let body = '';
     req.on('data', chunk => body += chunk);
     req.on('end', async () => {
       try {
-        const { apiKey, systemPrompt, userMessage } = JSON.parse(body);
-        const data = await callGroqAPI(apiKey, systemPrompt, userMessage);
+        const { systemPrompt, userMessage } = JSON.parse(body);
+        const apiKey = process.env.GEMINI_API_KEY;
+
+        if (!apiKey) {
+          res.writeHead(500, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ error: { message: 'GEMINI_API_KEY not configured' } }));
+          return;
+        }
+
+        const data = await callGeminiAPI(apiKey, systemPrompt, userMessage);
         res.writeHead(200, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify(data));
       } catch (error) {
@@ -90,5 +138,5 @@ app.post('/api/groq', async (req, res) => {
 
 server.listen(8000, '127.0.0.1', () => {
   console.log('🛡️ DARK EMPATHY SHIELD Server running at http://localhost:8000');
-  console.log('📡 API Proxy enabled for Groq');
+  console.log('📡 API Proxy enabled for Gemini');
 });
