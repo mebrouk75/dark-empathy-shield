@@ -474,10 +474,43 @@ Ajoute toujours cette note si la victime est blâmée :
 
         // Le serveur renvoie un format OpenAI-like
         return data.choices?.[0]?.message?.content || "Pas de réponse";
+
     } catch (error) {
         console.error("API Fetch Error:", error);
-        addMessage("<strong style='color:#ef4444;'>⚠️ ERREUR CONNEXION :</strong> " + error.message, "bot");
-        return null;
+
+        // --- MODE DÉMO (FALLBACK) ---
+        // Si l'API échoue, on utilise une réponse locale pour ne pas bloquer l'utilisateur
+        console.log("⚠️ Passage en mode DÉMO locale suite à erreur API");
+
+        const demoResponses = {
+            "dark": `🛡️ **DARK EMPATHY (Mode Démo)**
+            
+C'est la capacité de comprendre les émotions d'autrui non pour aider, mais pour manipuler.
+            
+• **Observer** : Scanner les failles.
+• **Simuler** : Feindre la compassion.
+• **Exploiter** : Frapper au bon endroit.`,
+
+            "narcissique": `🛡️ **NARCISSISME (Mode Démo)**
+            
+Le narcissique pathologique ne vous voit pas comme une personne, mais comme un objet (ressource).
+            
+• **Love Bombing** : Séduction intense.
+• **Dévaluation** : Critiques subtiles.
+• **Rejet** : Abandon brutal.`,
+
+            "default": `⚠️ **MODE HORS-LIGNE**
+            
+Je n'arrive pas à joindre le cerveau de l'IA (Problème de clé API).
+            
+Mais je suis toujours là. Pose-moi une question sur la **Dark Empathy**, le **Gaslighting** ou le **Silence Radio**.`
+        };
+
+        const lowerPrompt = prompt.toLowerCase();
+        if (lowerPrompt.includes("dark")) return demoResponses["dark"];
+        if (lowerPrompt.includes("narcissique") || lowerPrompt.includes("pn")) return demoResponses["narcissique"];
+
+        return demoResponses["default"];
     }
 }
 
