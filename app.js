@@ -30,7 +30,7 @@ saveSettings.addEventListener('click', () => {
         apiKey = key;
         localStorage.setItem('groq_api_key', apiKey);
         settingsModal.classList.add('hidden');
-        addMessage("<strong>⚡ CONNEXION ÉTABLIE</strong><br>IA Cloud activée via Groq. Analyses avancées disponibles.", "bot");
+        addMessage("⚡ <strong style='color:#10b981;'>CONNEXION ÉTABLIE</strong><br>IA Cloud activée via Gemini. Analyses avancées disponibles.", "bot");
     }
 });
 
