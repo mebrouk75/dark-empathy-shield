@@ -1,18 +1,31 @@
+```javascript
 // Dark Empathy Shield - Core with Groq API
 // Uses Groq AI for analysis, falls back to local Bible
 
 // DOM Elements
 const chatContainer = document.getElementById('chat-container');
 const userInput = document.getElementById('user-input');
-const settingsBtn = document.getElementById('settingsBtn');
-const settingsModal = document.getElementById('settingsModal');
-const closeSettings = document.getElementById('closeSettings');
-const saveSettings = document.getElementById('saveSettings');
-const apiKeyInput = document.getElementById('apiKeyInput');
+const sendBtn = document.getElementById('send-btn');
+const settingsBtn = document.getElementById('settings-btn');
+const settingsModal = document.getElementById('settings-modal');
+const closeSettingsBtn = document.getElementById('close-settings');
+const saveSettingsBtn = document.getElementById('save-settings');
+const apiKeyInput = document.getElementById('api-key-input');
+const voiceBtn = document.getElementById('voice-btn');
+const welcomeScreen = document.getElementById('welcome-screen');
 
 // Global state
-let apiKey = localStorage.getItem('groq_api_key') || '';
-let lastResponseIndex = -1;
+let apiKey = localStorage.getItem('gemini_api_key');
+if (apiKey) apiKeyInput.value = apiKey;
+
+    // Suggestion buttons
+    document.querySelectorAll('.suggestion-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const text = btn.querySelector('span:last-child').textContent.replace(/"/g, '');
+            userInput.value = text;
+            handleSend();
+        });
+    });
 let lastCategoryId = null;
 
 // Load saved API key
@@ -41,7 +54,7 @@ async function callGeminiAPI(prompt) {
 
     const url = `https://api.groq.com/openai/v1/chat/completions`;
 
-    const systemPrompt = `
+const systemPrompt = `
 # TU ES UN MENTOR PSYCHOLOGIQUE HOLISTIQUE (Expertise Complète)
 
 ## TA MISSION
@@ -451,39 +464,39 @@ Ajoute toujours cette note si la victime est blâmée :
 "Tu n'es pas la cause de cette toxicité. C'est une stratégie de l'autre pour se réguler. Laisse la culpabilité à celui qui l'a créée."
 `;
 
-    try {
-        // Appel au serveur Vercel (utilise la clé GEMINI_API_KEY définie dans Vercel)
-        const response = await fetch('/api/groq', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                systemPrompt: systemPrompt,
-                userMessage: "MESSAGE À ANALYSER : " + prompt
-            })
-        });
+try {
+    // Appel au serveur Vercel (utilise la clé GEMINI_API_KEY définie dans Vercel)
+    const response = await fetch('/api/groq', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            systemPrompt: systemPrompt,
+            userMessage: "MESSAGE À ANALYSER : " + prompt
+        })
+    });
 
-        const data = await response.json();
+    const data = await response.json();
 
-        if (data.error) {
-            console.error("API Error:", data.error);
-            addMessage("<strong style='color:#ef4444;'>⚠️ ERREUR API :</strong> " + data.error.message, "bot");
-            return null;
-        }
+    if (data.error) {
+        console.error("API Error:", data.error);
+        addMessage("<strong style='color:#ef4444;'>⚠️ ERREUR API :</strong> " + data.error.message, "bot");
+        return null;
+    }
 
-        // Le serveur renvoie un format OpenAI-like
-        return data.choices?.[0]?.message?.content || "Pas de réponse";
+    // Le serveur renvoie un format OpenAI-like
+    return data.choices?.[0]?.message?.content || "Pas de réponse";
 
-    } catch (error) {
-        console.error("API Fetch Error:", error);
+} catch (error) {
+    console.error("API Fetch Error:", error);
 
-        // --- MODE DÉMO (FALLBACK) ---
-        // Si l'API échoue, on utilise une réponse locale pour ne pas bloquer l'utilisateur
-        console.log("⚠️ Passage en mode DÉMO locale suite à erreur API");
+    // --- MODE DÉMO (FALLBACK) ---
+    // Si l'API échoue, on utilise une réponse locale pour ne pas bloquer l'utilisateur
+    console.log("⚠️ Passage en mode DÉMO locale suite à erreur API");
 
-        const demoResponses = {
-            "dark": `🛡️ **DARK EMPATHY (Mode Démo)**
+    const demoResponses = {
+        "dark": `🛡️ **DARK EMPATHY (Mode Démo)**
             
 C'est la capacité de comprendre les émotions d'autrui non pour aider, mais pour manipuler.
             
@@ -491,7 +504,7 @@ C'est la capacité de comprendre les émotions d'autrui non pour aider, mais pou
 • **Simuler** : Feindre la compassion.
 • **Exploiter** : Frapper au bon endroit.`,
 
-            "narcissique": `🛡️ **NARCISSISME (Mode Démo)**
+        "narcissique": `🛡️ **NARCISSISME (Mode Démo)**
             
 Le narcissique pathologique ne vous voit pas comme une personne, mais comme un objet (ressource).
             
@@ -499,19 +512,19 @@ Le narcissique pathologique ne vous voit pas comme une personne, mais comme un o
 • **Dévaluation** : Critiques subtiles.
 • **Rejet** : Abandon brutal.`,
 
-            "default": `⚠️ **MODE HORS-LIGNE**
+        "default": `⚠️ **MODE HORS-LIGNE**
             
 Je n'arrive pas à joindre le cerveau de l'IA (Problème de clé API).
             
 Mais je suis toujours là. Pose-moi une question sur la **Dark Empathy**, le **Gaslighting** ou le **Silence Radio**.`
-        };
+    };
 
-        const lowerPrompt = prompt.toLowerCase();
-        if (lowerPrompt.includes("dark")) return demoResponses["dark"];
-        if (lowerPrompt.includes("narcissique") || lowerPrompt.includes("pn")) return demoResponses["narcissique"];
+    const lowerPrompt = prompt.toLowerCase();
+    if (lowerPrompt.includes("dark")) return demoResponses["dark"];
+    if (lowerPrompt.includes("narcissique") || lowerPrompt.includes("pn")) return demoResponses["narcissique"];
 
-        return demoResponses["default"];
-    }
+    return demoResponses["default"];
+}
 }
 
 function consultBible(text) {
@@ -764,9 +777,20 @@ function addMessage(text, sender) {
     } else {
         div.innerHTML = formattedText;
     }
+    div.innerHTML = marked.parse(text);
 
-    chatContainer.appendChild(div);
-    scrollToBottom();
+    // Add TTS button for bot messages
+    const ttsBtn = document.createElement('button');
+    ttsBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="opacity-50 hover:opacity-100"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>';
+    ttsBtn.className = 'mt-2 float-right p-1 hover:bg-white/10 rounded-full transition-colors';
+    ttsBtn.onclick = () => speakText(text.replace(/<[^>]*>/g, ''));
+    div.appendChild(ttsBtn);
+} else {
+    div.textContent = text;
+}
+
+chatContainer.appendChild(div);
+chatContainer.scrollTop = chatContainer.scrollHeight;
 }
 
 function showTyping() {
