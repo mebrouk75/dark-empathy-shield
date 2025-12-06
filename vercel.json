@@ -1,8 +1,8 @@
 {
   "rewrites": [
     {
-      "source": "/api/(.*)",
-      "destination": "/server.mjs"
+      "source": "/api/groq",
+      "destination": "/api/index"
     }
   ]
 }
