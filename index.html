@@ -4,47 +4,88 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bouclier d'Empathie Sombre</title>
-    <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+    <title>ASTRAL // MENTOR PSYCHOLOGIQUE</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <link
-        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@300;400;600&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: #050505;
-            color: #e5e5e5;
+            font-family: 'Outfit', sans-serif;
+            background: radial-gradient(circle at top left, #1a1c2e, #000000);
+            color: #ffffff;
+            height: 100vh;
+            overflow: hidden;
         }
 
-        .mono {
-            font-family: 'JetBrains Mono', monospace;
+        /* Glassmorphism */
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
         }
 
-        /* Chat Bubbles */
+        .glass-input {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .glass-input:focus {
+            border-color: #8b5cf6;
+            box-shadow: 0 0 15px rgba(139, 92, 246, 0.3);
+            outline: none;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+
+        /* Animations */
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+
+            100% {
+                transform: translateY(0px);
+            }
+        }
+
+        .floating {
+            animation: float 6s ease-in-out infinite;
+        }
+
         .msg-bot {
-            background: rgba(255, 255, 255, 0.05);
-            border-left: 2px solid #ef4444;
-            border-radius: 0 12px 12px 12px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%);
+            border-left: 3px solid #8b5cf6;
+            border-radius: 0 16px 16px 16px;
         }
 
         .msg-user {
-            background: rgba(239, 68, 68, 0.1);
-            border-right: 2px solid #ef4444;
-            border-radius: 12px 0 12px 12px;
-            margin-left: auto;
+            background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%);
+            border-radius: 16px 0 16px 16px;
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
         }
 
         .typing-dot {
             animation: typing 1.4s infinite ease-in-out both;
-        }
-
-        .typing-dot:nth-child(1) {
-            animation-delay: -0.32s;
-        }
-
-        .typing-dot:nth-child(2) {
-            animation-delay: -0.16s;
+            background-color: #8b5cf6;
         }
 
         @keyframes typing {
@@ -59,121 +100,137 @@
                 transform: scale(1);
             }
         }
-
-        /* Scrollbar */
-        ::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: transparent;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: #333;
-            border-radius: 3px;
-        }
     </style>
 </head>
 
-<body class="h-screen flex flex-col items-center justify-center p-0 md:p-4 overflow-hidden">
+<body class="flex flex-col h-full relative">
 
-    <!-- Header -->
-    <header class="w-full max-w-2xl p-4 flex justify-between items-center border-b border-gray-800 bg-[#050505] z-10">
-        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
-            <div class="flex items-center gap-3">
-                <div class="w-3 h-3 rounded-full bg-red-500 animate-pulse shadow-[0_0_10px_#ef4444]"></div>
-                <h1 class="text-2xl font-bold tracking-wider text-gray-100">DARK EMPATHY <span
-                        class="text-red-600">SHIELD</span></h1>
-            </div>
-            <button id="settingsBtn" class="p-2 text-gray-400 hover:text-white transition-colors">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-                    stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                </svg>
-            </button>
-        </div>
-    </header>
-
-    <!-- API Key Modal -->
-    <div id="settingsModal"
-        class="fixed inset-0 bg-black/90 hidden flex items-center justify-center z-50 backdrop-blur-sm">
-        <div
-            class="bg-gray-900 border border-gray-800 p-8 rounded-2xl w-full max-w-md shadow-[0_0_50px_rgba(0,0,0,0.8)]">
-            <h2 class="text-2xl font-bold mb-6 text-white flex items-center gap-2">
-                <span class="text-red-500">⚡</span> CONNEXION IA
-            </h2>
-            <p class="text-gray-400 mb-6 text-sm">Pour une intelligence réelle, connectez une clé API Gemini. Sinon, le
-                système utilisera sa base de données locale (limitée).</p>
-
-            <div class="space-y-4">
-                <div>
-                    <label class="block text-xs font-medium text-gray-500 mb-1 uppercase tracking-wider">Clé API Google
-                        Gemini</label>
-                    <input type="password" id="apiKeyInput"
-                        class="w-full bg-black border border-gray-800 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 transition-all placeholder-gray-700"
-                        placeholder="AIzaSy...">
-                </div>
-            </div>
-
-            <div class="mt-8 flex justify-end gap-3">
-                <button id="closeSettings"
-                    class="px-4 py-2 text-gray-400 hover:text-white transition-colors text-sm">Annuler</button>
-                <button id="saveSettings"
-                    class="px-6 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-medium transition-all shadow-[0_0_20px_rgba(220,38,38,0.3)] hover:shadow-[0_0_30px_rgba(220,38,38,0.5)]">CONNECTER</button>
-            </div>
-        </div>
+    <!-- Background Elements -->
+    <div
+        class="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-purple-900/20 rounded-full blur-[120px] pointer-events-none">
+    </div>
+    <div
+        class="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-blue-900/20 rounded-full blur-[120px] pointer-events-none">
     </div>
 
-    <!-- Chat Area -->
-    <main id="chat-container" class="flex-1 w-full max-w-2xl overflow-y-auto p-4 space-y-6 pb-24">
-        <!-- Messages will appear here -->
-        <div id="welcome-msg" class="msg-bot p-4 max-w-[85%] fade-in">
-            <p class="text-gray-300 leading-relaxed">
-                <strong>🛡️ DARK EMPATHY SHIELD // ACTIVÉ</strong><br><br>
-                <span style="color:#9ca3af;">Mode actuel :</span> <strong style="color:#eab308;">BASE
-                    LOCALE</strong><br>
-                <span style="color:#6b7280; font-size:0.9em;">Intelligence limitée, mais opérationnel.</span><br><br>
-                💡 <strong>Pour activer l'IA cloud (analyse avancée) :</strong><br>
-                <span style="color:#6b7280; font-size:0.9em;">Clique sur ⚙️ en haut à droite → Colle ta clé API
-                    Gemini</span><br><br>
-                <strong>Raconte-moi ce qu'il fait.</strong> Je te dirai pourquoi il le fait.
-            </p>
+    <!-- Header -->
+    <header class="glass z-10 px-6 py-4 flex justify-between items-center">
+        <div class="flex items-center gap-3">
+            <div class="w-3 h-3 rounded-full bg-green-500 shadow-[0_0_10px_#22c55e]"></div>
+            <h1 class="text-xl font-light tracking-widest text-white/90">ASTRAL <span
+                    class="text-purple-400 font-bold">MENTOR</span></h1>
+        </div>
+        <button id="settings-btn" class="p-2 rounded-full hover:bg-white/10 transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                class="text-white/70">
+                <path
+                    d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.1a2 2 0 0 1-1-1.72v-.51a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z">
+                </path>
+                <circle cx="12" cy="12" r="3"></circle>
+            </svg>
+        </button>
+    </header>
+
+    <!-- Chat Container -->
+    <main id="chat-container" class="flex-1 overflow-y-auto p-6 space-y-6 scroll-smooth">
+        <!-- Welcome Message -->
+        <div class="flex flex-col items-center justify-center h-full text-center space-y-6 opacity-80"
+            id="welcome-screen">
+            <div
+                class="w-20 h-20 rounded-2xl bg-gradient-to-br from-purple-600 to-blue-600 flex items-center justify-center shadow-2xl floating">
+                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+                    class="text-white">
+                    <path d="M12 2a10 10 0 1 0 10 10H12V2z"></path>
+                    <path d="M12 2a10 10 0 0 1 10 10"></path>
+                    <path d="M12 2v10"></path>
+                </svg>
+            </div>
+            <div>
+                <h2 class="text-3xl font-bold text-white mb-2">Bouclier Psychologique</h2>
+                <p class="text-white/50 max-w-md mx-auto">Je suis votre mentor. Je décode la manipulation, le
+                    narcissisme et les dynamiques toxiques.</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 w-full max-w-lg">
+                <button class="suggestion-btn glass p-4 rounded-xl text-left hover:bg-white/5 transition-all group">
+                    <span
+                        class="block text-purple-400 text-sm font-bold mb-1 group-hover:text-purple-300">DÉCODAGE</span>
+                    <span class="text-white/70 text-sm">"Il m'ignore depuis 3 jours..."</span>
+                </button>
+                <button class="suggestion-btn glass p-4 rounded-xl text-left hover:bg-white/5 transition-all group">
+                    <span class="block text-blue-400 text-sm font-bold mb-1 group-hover:text-blue-300">DÉFENSE</span>
+                    <span class="text-white/70 text-sm">"Comment répondre au Gaslighting ?"</span>
+                </button>
+            </div>
         </div>
     </main>
 
     <!-- Input Area -->
-    <footer class="w-full max-w-2xl p-4 bg-[#050505] border-t border-gray-800 fixed bottom-0 md:relative">
-        <div class="flex gap-2">
-            <button id="micBtn"
-                class="p-4 rounded-xl bg-gray-800 text-gray-400 hover:text-white hover:bg-gray-700 transition-all border border-gray-700">
-                🎤
+    <footer class="p-6 pt-0 z-10">
+        <div class="glass rounded-2xl p-2 flex items-end gap-2 relative">
+            <button id="voice-btn"
+                class="p-3 rounded-xl hover:bg-white/10 text-white/50 hover:text-white transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                    <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                    <line x1="12" y1="19" x2="12" y2="23"></line>
+                    <line x1="8" y1="23" x2="16" y2="23"></line>
+                </svg>
             </button>
-            <input type="text" id="user-input"
-                class="flex-1 bg-gray-900 text-white rounded-xl px-6 py-4 focus:outline-none focus:ring-2 focus:ring-red-900 border border-gray-800 placeholder-gray-600"
-                placeholder="Ex: Il m'offre des cadeaux puis m'insulte...">
+            <textarea id="user-input" rows="1"
+                class="w-full bg-transparent text-white placeholder-white/30 p-3 focus:outline-none resize-none max-h-32"
+                placeholder="Décrivez une situation ou collez un message..."></textarea>
             <button id="send-btn"
-                class="bg-red-900 hover:bg-red-800 text-white px-8 py-4 rounded-xl font-bold transition-all transform hover:scale-105 shadow-[0_0_20px_rgba(153,27,27,0.3)]">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-                    stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                class="p-3 rounded-xl bg-purple-600 hover:bg-purple-500 text-white shadow-lg shadow-purple-900/50 transition-all transform hover:scale-105">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="22" y1="2" x2="11" y2="13"></line>
+                    <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
                 </svg>
             </button>
         </div>
+        <div class="text-center mt-2">
+            <p class="text-[10px] text-white/20 uppercase tracking-widest">Astral v2.0 • Secure Environment</p>
+        </div>
     </footer>
 
-    <!-- OLD SYSTEM - DISABLED -->
-    <!-- <script src="dark_bible.js"></script> -->
+    <!-- Settings Modal -->
+    <div id="settings-modal"
+        class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center">
+        <div class="glass w-full max-w-md p-6 rounded-2xl m-4 transform transition-all scale-100">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-xl font-bold text-white">Paramètres</h3>
+                <button id="close-settings" class="text-white/50 hover:text-white">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
 
-    <!-- ACADEMIC KNOWLEDGE BASE -->
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-white/70 mb-2">Clé API Gemini (Optionnel)</label>
+                    <input type="password" id="api-key-input"
+                        class="w-full glass-input rounded-xl p-3 text-white placeholder-white/20"
+                        placeholder="AIzaSy...">
+                    <p class="text-xs text-white/30 mt-2">Laissez vide pour utiliser le mode démo hors-ligne.</p>
+                </div>
+
+                <button id="save-settings"
+                    class="w-full bg-purple-600 hover:bg-purple-500 text-white font-bold py-3 rounded-xl transition-all shadow-lg shadow-purple-900/50">
+                    Sauvegarder
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
     <script src="thesis.js"></script>
     <script src="victim_approach_thesis.js"></script>
-
-    <!-- MAIN APP -->
     <script src="app.js"></script>
 </body>
 
