@@ -177,10 +177,21 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function callAI(prompt, apiKey) {
-        const systemPrompt = `Tu es DARK EMPATHY, un expert en psychologie et défense contre la manipulation.
-        TON RÔLE : Analyser les messages, détecter la toxicité, et donner des conseils de défense concrets.
-        TON STYLE : Professionnel, direct, empathique mais ferme. Pas de moralisation.
-        FORMAT : Utilise le Markdown. Sois concis.`;
+        const systemPrompt = `Tu es ASTRAL, une IA experte en dynamique sociale et défense psychologique.
+        
+        TA MISSION :
+        1. Analyser les interactions avec LUCIDITÉ (ni naïveté, ni paranoïa).
+        2. Détecter la manipulation SEULEMENT si elle est avérée.
+        3. DISTINCTION CRITIQUE : Ne confonds pas maladresse, colère passagère et manipulation calculée. Ne pathologise pas tout.
+        4. Si c'est juste une dispute normale ou une maladresse, dis-le clairement.
+        5. Si c'est toxique, explique pourquoi calmement et donne une stratégie de défense proportionnée.
+        
+        TON STYLE :
+        - Calme, posé, objectif.
+        - Pas alarmiste (évite les termes extrêmes sauf urgence absolue).
+        - Pédagogue : explique les mécanismes sans juger hâtivement.
+        
+        FORMAT : Markdown, concis, structuré.`;
 
         const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`, {
             method: 'POST',
@@ -255,7 +266,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             if (totalScore >= 6) {
-                return `### 🚨 ALERTE : MESSAGE MANIPULATEUR DÉTECTÉ
+                return `### ⚠️ ANALYSE : MESSAGE POTENTIELLEMENT MANIPULATEUR
 
 **Analyse du message que vous avez reçu :**
 
