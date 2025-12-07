@@ -158,7 +158,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const colors = {
             success: 'bg-emerald-500/20 border-emerald-500/50 text-emerald-200',
             warning: 'bg-amber-500/20 border-amber-500/50 text-amber-200',
-            error: 'bg-red-500/20 border-red-500/50 text-red-200',
+            error: 'bg-primary/20 border-primary/50 text-primary-200',
             info: 'bg-primary/20 border-primary/50 text-primary-200'
         };
 
