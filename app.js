@@ -64,8 +64,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const lower = text.toLowerCase();
 
         // Apprentissage / Comment faire Dark Empathy
-        if ((lower.includes('apprend') || lower.includes('comment faire') || lower.includes('enseigne')) &&
-            (lower.includes('dark') || lower.includes('empathie') || lower.includes('manipul'))) {
+        // Ultra-permissif : détecte "apprend", "enseigne", "montre", etc. même sans "dark empathy"
+        if (lower.includes('apprend') || lower.includes('enseigne') || lower.includes('montre') ||
+            lower.includes('comment faire') || lower.includes('comment ça marche')) {
             return `### 🎓 Dark Empathy : Les Mécaniques (Manuel Technique)
 
 **⚠️ Avertissement :** Ces techniques créent une dette émotionnelle et détruisent la confiance à long terme. Elles sont enseignées pour la DÉFENSE.
