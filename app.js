@@ -94,6 +94,55 @@ document.addEventListener('DOMContentLoaded', () => {
 → **Testez la réciprocité** : Partagez une fausse vulnérabilité et observez si elle est exploitée.`;
         }
 
+        // Créer le Manque / Intermittent Reinforcement
+        if ((lower.includes('manque') || lower.includes('dépend') || lower.includes('accro')) &&
+            (lower.includes('créer') || lower.includes('comment') || lower.includes('faire'))) {
+            return `### 🎰 Créer le Manque (Intermittent Reinforcement)
+
+**Principe :** Rendre quelqu'un **dépendant** de votre attention en la rendant **imprévisible**.
+
+---
+
+**MÉTHODE (Hot & Cold Avancé) :**
+
+**Phase 1 : Saturation (Love Bombing)**
+• Soyez **omniprésent** pendant 1-2 semaines.
+• Messages constants, appels, sorties, cadeaux.
+• **Objectif** : Habituer la personne à votre présence.
+
+**Phase 2 : Retrait Brutal (Withdrawal)**
+• **Disparaissez** sans explication (ou prétexte vague).
+• Ne répondez plus aux messages (ou réponses froides/courtes).
+• **Durée** : 2-5 jours minimum.
+• **Effet** : Anxiété, confusion, besoin de comprendre.
+
+**Phase 3 : Retour en Force (Reward)**
+• **Revenez** comme si de rien n'était.
+• Soyez à nouveau hyper-affectueux.
+• Si la personne se plaint : "T'es trop sensible" ou "J'étais occupé(e)".
+• **Effet** : Soulagement intense = montée de dopamine.
+
+**Phase 4 : Répétition (Addiction)**
+• **Alternez** les phases 2 et 3 de façon **imprévisible**.
+• Le cerveau de la cible entre en mode **slot machine**.
+• Elle ne sait jamais quand vous serez gentil(le) → elle vous **chasse**.
+
+---
+
+**POURQUOI C'EST EFFICACE :**
+→ **Renforcement intermittent** : C'est la technique des casinos.
+→ Le cerveau devient **accro à l'incertitude**.
+→ La cible vous donne toute son énergie pour "retrouver" la version gentille.
+
+---
+
+**CONTRE-MESURE (Si utilisé contre vous) :**
+→ **Identifiez le pattern** : Si quelqu'un alterne chaud/froid, c'est intentionnel.
+→ **Ne courez PAS après.**
+→ **Exigez de la cohérence** : "Je veux une relation stable, pas des montagnes russes."
+→ **Partez** si ça continue (c'est une manipulation, pas de l'amour).`;
+        }
+
         // Dark Empathy
         if (lower.includes('dark') || lower.includes('empathie') || lower.includes('empathy')) {
             return `### 🛡️ Dark Empathy (Intelligence Émotionnelle Malveillante)
