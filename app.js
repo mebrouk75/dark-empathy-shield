@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Load saved API key
     // Load saved API key or use Default
-    const DEFAULT_API_KEY = 'AIzaSyCCSC1-6oyLsYoCtnwhZvDharhhrWYnL_4';
+    const DEFAULT_API_KEY = 'AIzaSyBtzgUyJ3uLH7G5UII5hX5iTwwZmu1viy4';
     const savedKey = localStorage.getItem('gemini_api_key');
     if (savedKey && apiKeyInput) {
         apiKeyInput.value = savedKey;
