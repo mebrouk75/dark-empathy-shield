@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DARK EMPATHY // DEFENSE SYSTEM</title>
+    <title>DARK EMPATHY // ASTRAL PRO</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <link
@@ -16,24 +16,48 @@
             theme: {
                 extend: {
                     colors: {
-                        background: '#09090b',
-                        surface: '#18181b',
-                        primary: '#7c3aed', // Vrai Violet (Violet-600)
-                        accent: '#a78bfa', // Violet Clair (Violet-400)
-                        success: '#10b981',
-                        danger: '#ef4444',
-                        text: '#fafafa',
-                        muted: '#a1a1aa'
+                        background: '#09090b', // Zinc 950
+                        surface: '#18181b',    // Zinc 900
+                        primary: '#7c3aed',    // Violet 600
+                        primary_hover: '#6d28d9', // Violet 700
+                        accent: '#a78bfa',     // Violet 400
+                        text: '#fafafa',       // Zinc 50
+                        muted: '#a1a1aa',      // Zinc 400
+                        border: 'rgba(255, 255, 255, 0.08)'
                     },
                     fontFamily: {
                         sans: ['Inter', 'sans-serif'],
                         mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'glow': 'glow 2s ease-in-out infinite alternate',
+                    },
+                    keyframes: {
+                        glow: {
+                            '0%': { boxShadow: '0 0 5px #7c3aed, 0 0 10px #7c3aed' },
+                            '100%': { boxShadow: '0 0 20px #7c3aed, 0 0 30px #7c3aed' },
+                        }
                     }
                 }
             }
         }
     </script>
     <style>
+        /* Glassmorphism Utilities */
+        .glass {
+            background: rgba(24, 24, 27, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .glass-panel {
+            background: rgba(9, 9, 11, 0.8);
+            backdrop-filter: blur(16px);
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
         /* Custom Scrollbar */
         ::-webkit-scrollbar {
             width: 6px;
@@ -52,9 +76,38 @@
             background: #3f3f46;
         }
 
+        /* Markdown Styles */
+        .prose p {
+            margin-bottom: 0.75em;
+            line-height: 1.6;
+        }
+
+        .prose strong {
+            color: #a78bfa;
+            font-weight: 600;
+        }
+
+        /* Violet accents */
+        .prose ul {
+            list-style-type: disc;
+            padding-left: 1.5em;
+            margin-bottom: 0.75em;
+            color: #d4d4d8;
+        }
+
+        .prose h3 {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #fff;
+            margin-top: 1.5em;
+            margin-bottom: 0.5em;
+            border-left: 3px solid #7c3aed;
+            padding-left: 0.75em;
+        }
+
         /* Animations */
         .fade-in {
-            animation: fadeIn 0.3s ease-out;
+            animation: fadeIn 0.4s ease-out;
         }
 
         @keyframes fadeIn {
@@ -93,71 +146,50 @@
                 transform: scale(1);
             }
         }
-
-        /* Markdown Styles */
-        .prose p {
-            margin-bottom: 0.75em;
-            line-height: 1.6;
-        }
-
-        .prose strong {
-            color: #fff;
-            font-weight: 600;
-        }
-
-        .prose ul {
-            list-style-type: disc;
-            padding-left: 1.5em;
-            margin-bottom: 0.75em;
-        }
-
-        .prose li {
-            margin-bottom: 0.25em;
-        }
-
-        .prose h3 {
-            font-size: 1.1em;
-            font-weight: 600;
-            color: #fff;
-            margin-top: 1.5em;
-            margin-bottom: 0.5em;
-        }
     </style>
 </head>
 
 <body class="bg-background text-text h-screen flex overflow-hidden font-sans selection:bg-primary/30">
 
-    <!-- Sidebar -->
-    <aside class="w-64 bg-surface border-r border-white/5 flex flex-col hidden md:flex">
+    <!-- Background Ambient Glow -->
+    <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+        <div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary/10 rounded-full blur-[120px]"></div>
+        <div class="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-primary/5 rounded-full blur-[120px]"></div>
+    </div>
+
+    <!-- Sidebar (Desktop) -->
+    <aside class="w-72 glass-panel flex-col hidden md:flex z-10 relative">
         <div class="p-6 border-b border-white/5">
             <div class="flex items-center gap-3">
                 <div
-                    class="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-accent flex items-center justify-center shadow-lg shadow-primary/20">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
+                    class="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-black border border-white/10 flex items-center justify-center shadow-lg shadow-primary/20">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                         class="text-white">
                         <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
                     </svg>
                 </div>
                 <div>
-                    <h1 class="font-bold tracking-tight text-sm">DARK EMPATHY</h1>
-                    <p class="text-[10px] text-muted uppercase tracking-wider">Defense System</p>
+                    <h1 class="font-bold tracking-tight text-base text-white">DARK EMPATHY</h1>
+                    <p class="text-[10px] text-primary uppercase tracking-widest font-semibold">Astral Pro</p>
                 </div>
             </div>
         </div>
 
         <nav class="flex-1 p-4 space-y-2 overflow-y-auto">
-            <div class="text-xs font-medium text-muted uppercase tracking-wider px-2 mb-2">Modules</div>
+            <div class="text-[10px] font-bold text-muted uppercase tracking-widest px-3 mb-3 opacity-60">Navigation
+            </div>
             <button
-                class="w-full text-left px-3 py-2 rounded-lg bg-white/5 text-white text-sm font-medium flex items-center gap-2 border border-white/5">
+                class="w-full text-left px-3 py-2.5 rounded-lg bg-primary/10 text-white text-sm font-medium flex items-center gap-3 border border-primary/20 shadow-sm">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="text-primary">
                     <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
                 </svg>
                 Chat Principal
             </button>
             <button
-                class="w-full text-left px-3 py-2 rounded-lg hover:bg-white/5 text-muted hover:text-white text-sm transition-colors flex items-center gap-2">
+                class="w-full text-left px-3 py-2.5 rounded-lg hover:bg-white/5 text-muted hover:text-white text-sm transition-all flex items-center gap-3">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
@@ -168,30 +200,28 @@
         </nav>
 
         <div class="p-4 border-t border-white/5">
-            <div id="status-indicator"
-                class="flex items-center gap-2 px-3 py-2 rounded-lg bg-green-500/10 border border-green-500/20">
-                <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
-                <span class="text-xs font-medium text-green-500">Système Opérationnel</span>
+            <div class="flex items-center gap-3 px-3 py-2 rounded-lg bg-black/20 border border-white/5">
+                <div class="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]"></div>
+                <span class="text-xs font-medium text-emerald-500/90">Système Actif</span>
             </div>
         </div>
     </aside>
 
     <!-- Main Content -->
-    <main class="flex-1 flex flex-col relative">
+    <main class="flex-1 flex flex-col relative z-10">
         <!-- Mobile Header -->
-        <header
-            class="md:hidden p-4 border-b border-white/5 flex justify-between items-center bg-surface/50 backdrop-blur-md sticky top-0 z-10">
-            <div class="flex items-center gap-2">
-                <div class="w-6 h-6 rounded bg-primary flex items-center justify-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+        <header class="md:hidden p-4 glass border-b-0 flex justify-between items-center sticky top-0 z-20">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-lg bg-primary flex items-center justify-center shadow-lg shadow-primary/30">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                         class="text-white">
                         <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
                     </svg>
                 </div>
-                <span class="font-bold text-sm">DARK EMPATHY</span>
+                <span class="font-bold text-sm tracking-wide">DARK EMPATHY</span>
             </div>
-            <button id="settings-btn" class="p-2 text-muted hover:text-white">
+            <button id="settings-btn" class="p-2 text-muted hover:text-white transition-colors">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <circle cx="12" cy="12" r="3"></circle>
@@ -207,49 +237,58 @@
             <!-- Welcome State -->
             <div id="welcome-screen"
                 class="flex flex-col items-center justify-center h-full text-center space-y-8 max-w-2xl mx-auto fade-in">
-                <div class="absolute inset-0 bg-primary/20 blur-3xl rounded-full"></div>
-                <div
-                    class="relative w-24 h-24 rounded-2xl bg-surface border border-white/10 flex items-center justify-center shadow-2xl">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
-                        class="text-primary">
-                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-                    </svg>
+                <div class="relative group">
+                    <div
+                        class="absolute inset-0 bg-primary/30 blur-[60px] rounded-full group-hover:bg-primary/40 transition-all duration-700">
+                    </div>
+                    <div
+                        class="relative w-28 h-28 rounded-3xl bg-black/40 border border-white/10 flex items-center justify-center shadow-2xl backdrop-blur-xl group-hover:border-primary/50 transition-all duration-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="56" height="56" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+                            class="text-primary drop-shadow-[0_0_15px_rgba(124,58,237,0.5)]">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="space-y-3">
+                    <h2 class="text-3xl md:text-4xl font-bold text-white tracking-tight">Protection Psychologique</h2>
+                    <p class="text-muted text-sm md:text-base max-w-md mx-auto leading-relaxed">
+                        Analysez les conversations, détectez la manipulation et obtenez des stratégies de défense en
+                        temps réel.
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-lg">
+                    <button
+                        class="suggestion-btn group p-4 rounded-2xl glass hover:bg-white/5 hover:border-primary/50 transition-all text-left relative overflow-hidden">
+                        <div
+                            class="absolute inset-0 bg-gradient-to-r from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
+                        </div>
+                        <div class="text-[10px] font-bold text-primary mb-1 uppercase tracking-widest relative z-10">
+                            Analyse</div>
+                        <div class="text-sm text-white/90 group-hover:text-white relative z-10">"Est-ce que ce message
+                            est manipulatoire ?"</div>
+                    </button>
+                    <button
+                        class="suggestion-btn group p-4 rounded-2xl glass hover:bg-white/5 hover:border-primary/50 transition-all text-left relative overflow-hidden">
+                        <div
+                            class="absolute inset-0 bg-gradient-to-r from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
+                        </div>
+                        <div class="text-[10px] font-bold text-accent mb-1 uppercase tracking-widest relative z-10">
+                            Défense</div>
+                        <div class="text-sm text-white/90 group-hover:text-white relative z-10">"Comment répondre au
+                            silence radio ?"</div>
+                    </button>
                 </div>
             </div>
-
-            <div class="space-y-2">
-                <h2
-                    class="text-2xl md:text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-white/60">
-                    Protection Psychologique Active</h2>
-                <p class="text-muted text-sm md:text-base max-w-md mx-auto">
-                    Analysez les conversations, détectez la manipulation et obtenez des stratégies de défense en
-                    temps réel.
-                </p>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
-                <button
-                    class="suggestion-btn group p-4 rounded-xl bg-surface border border-white/5 hover:border-primary/50 hover:bg-surface/80 transition-all text-left">
-                    <div class="text-xs font-bold text-primary mb-1 uppercase tracking-wider">Analyse</div>
-                    <div class="text-sm text-white/80 group-hover:text-white">"Est-ce que ce message est
-                        manipulatoire ?"</div>
-                </button>
-                <button
-                    class="suggestion-btn group p-4 rounded-xl bg-surface border border-white/5 hover:border-primary/50 hover:bg-surface/80 transition-all text-left">
-                    <div class="text-xs font-bold text-accent mb-1 uppercase tracking-wider">Défense</div>
-                    <div class="text-sm text-white/80 group-hover:text-white">"Comment répondre au silence radio ?"
-                    </div>
-                </button>
-            </div>
-        </div>
         </div>
 
         <!-- Input Area -->
-        <div class="p-4 md:p-6 bg-background/80 backdrop-blur-lg border-t border-white/5">
-            <div class="max-w-3xl mx-auto relative">
+        <div class="p-4 md:p-6 relative z-20">
+            <div class="max-w-3xl mx-auto">
                 <div
-                    class="bg-surface border border-white/10 rounded-2xl p-2 flex items-end gap-2 shadow-xl shadow-black/20 focus-within:border-primary/50 focus-within:ring-1 focus-within:ring-primary/50 transition-all">
+                    class="glass rounded-2xl p-2 flex items-end gap-2 shadow-2xl shadow-black/50 focus-within:border-primary/50 focus-within:ring-1 focus-within:ring-primary/50 transition-all duration-300">
                     <button id="voice-btn"
                         class="p-3 rounded-xl text-muted hover:text-white hover:bg-white/5 transition-colors">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
@@ -262,20 +301,22 @@
                     </button>
 
                     <textarea id="user-input" rows="1"
-                        class="flex-1 bg-transparent text-white placeholder-muted p-3 focus:outline-none resize-none max-h-32 text-sm md:text-base"
-                        placeholder="Décrivez une situation..."></textarea>
+                        class="flex-1 bg-transparent text-white placeholder-muted/50 p-3 focus:outline-none resize-none max-h-32 text-sm md:text-base font-medium"
+                        placeholder="Décrivez une situation ou collez un message..."></textarea>
 
                     <button id="send-btn"
-                        class="p-3 rounded-xl bg-primary hover:bg-primary/90 text-white transition-all shadow-lg shadow-primary/20">
+                        class="p-3 rounded-xl bg-primary hover:bg-primary_hover text-white transition-all shadow-lg shadow-primary/20 hover:shadow-primary/40 group">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            class="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform">
                             <line x1="22" y1="2" x2="11" y2="13"></line>
                             <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
                         </svg>
                     </button>
                 </div>
-                <div class="text-center mt-2">
-                    <p class="text-[10px] text-muted">IA Sécurisée • Confidentialité Totale</p>
+                <div class="text-center mt-3">
+                    <p class="text-[10px] text-muted/60 tracking-wider uppercase font-medium">IA Sécurisée •
+                        Confidentialité Totale</p>
                 </div>
             </div>
         </div>
@@ -283,12 +324,16 @@
 
     <!-- Settings Modal -->
     <div id="settings-modal"
-        class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-surface border border-white/10 w-full max-w-md p-6 rounded-2xl shadow-2xl">
-            <div class="flex justify-between items-center mb-6">
-                <h3 class="text-lg font-bold text-white">Configuration</h3>
-                <button id="close-settings" class="text-muted hover:text-white">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+        class="fixed inset-0 bg-black/90 backdrop-blur-md z-50 hidden flex items-center justify-center p-4 fade-in">
+        <div class="glass rounded-2xl w-full max-w-md p-8 shadow-2xl border border-white/10 relative overflow-hidden">
+            <!-- Glow effect -->
+            <div class="absolute top-0 right-0 w-32 h-32 bg-primary/20 blur-[60px] rounded-full pointer-events-none">
+            </div>
+
+            <div class="flex justify-between items-center mb-8 relative z-10">
+                <h3 class="text-xl font-bold text-white tracking-tight">Configuration</h3>
+                <button id="close-settings" class="text-muted hover:text-white transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <line x1="18" y1="6" x2="6" y2="18"></line>
                         <line x1="6" y1="6" x2="18" y2="18"></line>
@@ -296,22 +341,36 @@
                 </button>
             </div>
 
-            <div class="space-y-4">
+            <div class="space-y-6 relative z-10">
                 <div>
-                    <label class="block text-xs font-medium text-muted uppercase tracking-wider mb-2">Clé API
+                    <label class="block text-xs font-bold text-primary uppercase tracking-widest mb-3">Clé API
                         Gemini</label>
-                    <input type="password" id="api-key-input"
-                        class="w-full bg-background border border-white/10 rounded-xl p-3 text-white text-sm focus:border-primary focus:outline-none transition-colors"
-                        placeholder="AIzaSy...">
+                    <div class="relative">
+                        <input type="password" id="api-key-input"
+                            class="w-full bg-black/50 border border-white/10 rounded-xl p-4 text-white text-sm focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-all placeholder-white/20"
+                            placeholder="AIzaSy...">
+                        <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" class="text-muted">
+                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    <p class="text-[10px] text-muted mt-2">La clé est stockée uniquement dans votre navigateur.</p>
                 </div>
 
                 <button id="save-settings"
-                    class="w-full bg-primary hover:bg-primary/90 text-white font-medium py-3 rounded-xl transition-all">
-                    Sauvegarder
+                    class="w-full bg-primary hover:bg-primary_hover text-white font-bold py-4 rounded-xl transition-all shadow-lg shadow-primary/20 hover:shadow-primary/40">
+                    SAUVEGARDER
                 </button>
             </div>
         </div>
     </div>
+
+    <!-- Toast Notification Container -->
+    <div id="toast-container" class="fixed bottom-6 right-6 z-50 flex flex-col gap-2 pointer-events-none"></div>
 
     <script src="thesis.js"></script>
     <script src="victim_approach_thesis.js"></script>

@@ -1,4 +1,4 @@
-// DARK EMPATHY - Hybrid Version (API + Local Fallback)
+// DARK EMPATHY - ASTRAL PRO (Hybrid Version)
 
 document.addEventListener('DOMContentLoaded', () => {
     const chatContainer = document.getElementById('chat-container');
@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const saveSettingsBtn = document.getElementById('save-settings');
     const apiKeyInput = document.getElementById('api-key-input');
     const welcomeScreen = document.getElementById('welcome-screen');
+    const toastContainer = document.getElementById('toast-container');
 
     // Load saved API key
     const savedKey = localStorage.getItem('gemini_api_key');
@@ -40,7 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const key = apiKeyInput.value.trim();
             if (key) {
                 localStorage.setItem('gemini_api_key', key);
-                alert('Clé API sauvegardée !');
+                showToast('Clé API sauvegardée', 'success');
                 settingsModal.classList.add('hidden');
             }
         });
@@ -49,16 +50,14 @@ document.addEventListener('DOMContentLoaded', () => {
     // Suggestion buttons
     document.querySelectorAll('.suggestion-btn').forEach(btn => {
         btn.addEventListener('click', () => {
-            const text = btn.querySelector('div:last-child').textContent.replace(/"/g, '');
+            const text = btn.querySelector('.text-sm').textContent.replace(/"/g, '');
             userInput.value = text;
             handleSend();
         });
     });
 
     // Version Check
-    console.log("Dark Empathy Shield v2.1 (Hybrid Mode) Loaded");
-    const footer = document.querySelector('.text-center p');
-    if (footer) footer.textContent += " • v2.1";
+    console.log("Dark Empathy Shield v3.0 (Astral Pro) Loaded");
 
     async function handleSend() {
         const text = userInput.value.trim();
@@ -81,7 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
             try {
                 // Basic validation
                 if (!apiKey.startsWith('AIza')) {
-                    throw new Error('Clé API invalide (doit commencer par AIza)');
+                    throw new Error('Clé API invalide');
                 }
 
                 const apiResponse = await callAI(text, apiKey);
@@ -90,6 +89,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             } catch (error) {
                 console.error("API Error, falling back to local:", error);
+                showToast("Mode hors-ligne activé (Erreur API)", "warning");
                 // Fallback silently to local
             }
         }
@@ -126,6 +126,32 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const data = await response.json();
         return data.candidates[0].content.parts[0].text;
+    }
+
+    function showToast(message, type = 'info') {
+        const toast = document.createElement('div');
+        const colors = {
+            success: 'bg-emerald-500/20 border-emerald-500/50 text-emerald-200',
+            warning: 'bg-amber-500/20 border-amber-500/50 text-amber-200',
+            error: 'bg-red-500/20 border-red-500/50 text-red-200',
+            info: 'bg-primary/20 border-primary/50 text-primary-200'
+        };
+
+        toast.className = `px-4 py-3 rounded-xl border backdrop-blur-md text-sm font-medium shadow-lg transform transition-all duration-300 translate-y-10 opacity-0 ${colors[type] || colors.info}`;
+        toast.textContent = message;
+
+        toastContainer.appendChild(toast);
+
+        // Animate in
+        requestAnimationFrame(() => {
+            toast.classList.remove('translate-y-10', 'opacity-0');
+        });
+
+        // Remove after 3s
+        setTimeout(() => {
+            toast.classList.add('translate-y-10', 'opacity-0');
+            setTimeout(() => toast.remove(), 300);
+        }, 3000);
     }
 
     function getLocalResponse(text) {
@@ -939,7 +965,7 @@ Je suis en mode hors-ligne (IA locale). Mes réponses sont basées sur des mots-
 
     function addMessage(text, sender) {
         const div = document.createElement('div');
-        div.className = `p-4 rounded-2xl max-w-[85%] fade-in ${sender === 'user' ? 'bg-primary text-white self-end ml-auto' : 'bg-surface border border-white/10 text-gray-100 self-start'}`;
+        div.className = `p-4 rounded-2xl max-w-[85%] fade-in ${sender === 'user' ? 'bg-primary text-white self-end ml-auto shadow-lg shadow-primary/20' : 'glass text-gray-100 self-start'}`;
 
         if (sender === 'bot') {
             div.innerHTML = marked.parse(text);
@@ -955,7 +981,7 @@ Je suis en mode hors-ligne (IA locale). Mes réponses sont basées sur des mots-
     function showTyping() {
         const div = document.createElement('div');
         div.id = 'typing-indicator';
-        div.className = 'bg-surface border border-white/10 p-4 rounded-2xl self-start flex gap-1 w-16 items-center justify-center';
+        div.className = 'glass p-4 rounded-2xl self-start flex gap-1 w-16 items-center justify-center';
         div.innerHTML = '<div class="w-2 h-2 bg-primary rounded-full typing-dot"></div><div class="w-2 h-2 bg-primary rounded-full typing-dot"></div><div class="w-2 h-2 bg-primary rounded-full typing-dot"></div>';
         chatContainer.appendChild(div);
         chatContainer.scrollTop = chatContainer.scrollHeight;
