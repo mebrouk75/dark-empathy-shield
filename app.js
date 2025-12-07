@@ -55,6 +55,11 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    // Version Check
+    console.log("Dark Empathy Shield v2.1 (Hybrid Mode) Loaded");
+    const footer = document.querySelector('.text-center p');
+    if (footer) footer.textContent += " • v2.1";
+
     async function handleSend() {
         const text = userInput.value.trim();
         if (!text) return;
@@ -74,17 +79,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (apiKey) {
             try {
+                // Basic validation
+                if (!apiKey.startsWith('AIza')) {
+                    throw new Error('Clé API invalide (doit commencer par AIza)');
+                }
+
                 const apiResponse = await callAI(text, apiKey);
                 removeTyping(typingId);
                 addMessage(apiResponse, 'bot');
                 return;
             } catch (error) {
                 console.error("API Error, falling back to local:", error);
-                // Fallback to local below
+                // Fallback silently to local
             }
         }
 
-        // Local Fallback (Simulated Delay)
+        // Local Fallback
         setTimeout(() => {
             removeTyping(typingId);
             const response = getLocalResponse(text);
