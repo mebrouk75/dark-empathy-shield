@@ -62,7 +62,17 @@ document.addEventListener('DOMContentLoaded', () => {
     // Freemium Logic
     const MAX_FREE_MESSAGES = 3;
     let messageCount = parseInt(localStorage.getItem('dark_empathy_msg_count') || '0');
-    let isPremium = localStorage.getItem('dark_empathy_premium') === 'true';
+    let isPremium = false;
+
+    // Check Premium Status & Expiry
+    const premiumExpiry = localStorage.getItem('dark_empathy_premium_expiry');
+    if (premiumExpiry && Date.now() < parseInt(premiumExpiry)) {
+        isPremium = true;
+    } else if (premiumExpiry) {
+        // Expired
+        localStorage.removeItem('dark_empathy_premium_expiry');
+        isPremium = false;
+    }
 
     async function handleSend() {
         const text = userInput.value.trim();
@@ -119,11 +129,38 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 800);
     }
 
-    function showPaywall() {
+    function showPaywall(message = null) {
         const modal = document.getElementById('paywall-modal');
         if (modal) {
             modal.classList.remove('hidden');
             modal.classList.add('flex');
+
+            // Setup Unlock Logic
+            const codeInput = document.getElementById('access-code-input');
+            const submitBtn = document.getElementById('submit-code-btn');
+            const errorMsg = document.getElementById('code-error');
+
+            if (submitBtn) {
+                submitBtn.onclick = () => {
+                    const code = codeInput.value.trim().toUpperCase();
+                    // HARDCODED CODES (To be replaced by real backend later)
+                    const validCodes = ['DARK30', 'VIP2025', 'ASTRAL'];
+
+                    if (validCodes.includes(code)) {
+                        // UNLOCK FOR 30 MINUTES
+                        const expiry = Date.now() + (30 * 60 * 1000); // 30 mins
+                        localStorage.setItem('dark_empathy_premium_expiry', expiry.toString());
+                        isPremium = true;
+
+                        modal.classList.add('hidden');
+                        modal.classList.remove('flex');
+                        showToast("Accès Pro activé (30 min)", "success");
+                    } else {
+                        errorMsg.classList.remove('hidden');
+                        setTimeout(() => errorMsg.classList.add('hidden'), 2000);
+                    }
+                };
+            }
         }
     }
 

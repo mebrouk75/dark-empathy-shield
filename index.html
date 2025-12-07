@@ -264,8 +264,19 @@
                         DÉBLOQUER L'ACCÈS COMPLET (2,99€)
                     </a>
 
-                    <p class="text-[10px] text-muted/50 uppercase tracking-widest">Paiement Sécurisé • Accès Immédiat
-                    </p>
+                    <div class="mt-6 pt-6 border-t border-white/10">
+                        <p class="text-sm text-muted mb-2">Vous avez déjà un code ?</p>
+                        <div class="flex gap-2">
+                            <input type="text" id="access-code-input" placeholder="Entrez votre code ici"
+                                class="flex-1 bg-black/50 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary/50 text-center uppercase tracking-widest">
+                            <button id="submit-code-btn"
+                                class="bg-primary/20 hover:bg-primary/40 text-primary border border-primary/50 px-4 py-2 rounded-lg transition-all font-bold">OK</button>
+                        </div>
+                        <p id="code-error" class="text-red-400 text-xs mt-2 hidden">Code invalide</p>
+                    </div>
+
+                    <p class="text-[10px] text-muted/50 uppercase tracking-widest mt-4">Paiement Sécurisé • Accès
+                        Immédiat (30 min)</p>
                 </div>
             </div>
         </div>
