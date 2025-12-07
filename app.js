@@ -199,6 +199,148 @@ La culpabilité est une arme de contrôle puissante.
 "Je comprends que tu sois déçu(e), mais je ne peux pas être responsable de tes attentes."`;
         }
 
+        // Love Bombing
+        if (lower.includes('love bomb') || lower.includes('séduction intense') || lower.includes('trop gentil')) {
+            return `### 💣 Love Bombing (Bombardement Amoureux)
+
+Stratégie de séduction **excessive et rapide** pour vous rendre dépendant(e).
+
+**Signes :**
+• Déclarations d'amour ultra-rapides ("Tu es l'amour de ma vie" après 2 semaines).
+• Avalanche de cadeaux, messages, attention.
+• Future-faking : "On va se marier, avoir des enfants..." (promesses irréalistes).
+
+**Pourquoi c'est toxique :**
+→ C'est un **investissement pour vous contrôler** plus tard.
+→ Crée une dette émotionnelle ("Après tout ce qu'il a fait pour moi...").
+
+**Défense :**
+→ **Méfiance si c'est trop beau trop vite.**
+→ **Observez les actes sur la durée**, pas les paroles.`;
+        }
+
+        // Triangulation
+        if (lower.includes('triangul') || lower.includes('jalousie') || lower.includes('compare')) {
+            return `### 🔺 Triangulation
+
+Technique pour vous mettre en **compétition** avec une tierce personne (réelle ou imaginaire).
+
+**Exemples :**
+• "Mon ex ne m'aurait jamais parlé comme ça."
+• "X m'a proposé de sortir, mais j'ai dit non..." (pour te rendre jaloux/se).
+• Mettre en avant un(e) ami(e) pour créer de l'insécurité.
+
+**Objectif :**
+→ Vous rendre **insécure** et **dépendant(e)** de son approbation.
+
+**Défense :**
+→ **Ne jouez pas le jeu.** Refusez la compétition.
+→ Réponse : "Je ne vais pas me comparer à qui que ce soit."`;
+        }
+
+        // Hoovering
+        if (lower.includes('hoover') || lower.includes('aspirateur') || lower.includes('revient') || lower.includes('retour')) {
+            return `### 🌪️ Hoovering (Aspiration de Retour)
+
+Tentative de **vous ramener** après une rupture ou un conflit.
+
+**Tactiques :**
+• Messages nostalgiques : "Tu me manques, je pense à toi..."
+• Fausses excuses : "J'ai changé, je te promets."
+• Urgence fabriquée : "J'ai besoin de toi, je vais mal..."
+• Contact indirect : Like sur les réseaux, message à un ami commun.
+
+**Défense (si vous voulez le No Contact) :**
+→ **Bloquez partout** (téléphone, réseaux, email).
+→ **Ne répondez JAMAIS.** Même un "laisse-moi tranquille" = victoire pour lui.
+
+**Important :**
+→ Le hoovering arrive souvent **quand vous allez mieux.** C'est intentionnel.`;
+        }
+
+        // Trauma Bond / Lien Traumatique
+        if (lower.includes('trauma bond') || lower.includes('lien trauma') || lower.includes('attachement')) {
+            return `### 🔗 Trauma Bond (Lien Traumatique)
+
+**Attachement pathologique** créé par l'alternance de violence et de gentillesse.
+
+**Pourquoi c'est si puissant :**
+• Le cerveau associe la **douleur au soulagement** qui suit.
+• Vous espérez constamment **retrouver la version gentille**.
+• Créé une dépendance chimique (montées de dopamine).
+
+**Signes que vous êtes trauma-bonded :**
+• Vous le détestez ET ne pouvez pas partir.
+• Vous le défendez devant les autres.
+• Chaque fois qu'il est gentil, vous oubliez le reste.
+
+**Défense (Réveil en Douceur) :**
+→ **Notez les mauvais moments** dans un journal (pour contrer l'amnésie).
+→ **No Contact** : C'est la SEULE façon de briser le lien.
+→ **Patience** : Le sevrage prend du temps (comme une addiction).`;
+        }
+
+        // Violence Physique (ALERTE CRITIQUE)
+        if (lower.includes('violence') || lower.includes('frappe') || lower.includes('coup') || lower.includes('physique')) {
+            return `### 🚨 ALERTE VIOLENCE PHYSIQUE
+
+**IMPORTANT : Votre sécurité est prioritaire.**
+
+**Numéros d'urgence France :**
+• **3919** : Violences Femmes Info (gratuit, anonyme, 24h/7j)
+• **17** : Police Secours
+• **114** : SMS d'urgence (si vous ne pouvez pas parler)
+
+---
+
+**Le Cycle de la Violence (à connaître) :**
+1. **Tension** : Atmosphere lourde, marche sur des œufs.
+2. **Explosion** : Violence (verbale/physique).
+3. **Lune de Miel** : Excuses, promesses, gentillesse.
+4. **➰ Répétition** : Le cycle recommence (et s'empire).
+
+**Phrases dangereuses :**
+• "Tu m'as poussé à bout."
+• "C'était juste une claque, pas de la violence."
+• "C'est le stress du travail."
+
+**VÉRITÉ :**
+→ **Il n'y a AUCUNE excuse** pour la violence.
+→ **Ça ne s'arrête JAMAIS** sans intervention.
+
+**Action immédiate :**
+→ **Sortez de la pièce** si possible.
+→ **Appelez le 3919** pour un plan de sortie sécurisé.
+→ **Main courante** : Allez au commissariat (trace légale sans plainte).`;
+        }
+
+        // Legal Warfare / Menaces Juridiques
+        if (lower.includes('menace') || lower.includes('avocat') || lower.includes('tribunal') || lower.includes('juridique') || lower.includes('légal')) {
+            return `### ⚖️ Legal Warfare (Guerre Juridique / Bluff)
+
+Les manipulateurs utilisent les **menaces légales** pour terroriser.
+
+**Menaces courantes (souvent du BLUFF) :**
+• "Je vais te faire perdre la garde des enfants."
+• "Mon avocat va te détruire."
+• "Je vais bloquer ton compte bancaire."
+• "Tu vas payer une pension énorme."
+
+**VÉRITÉ :**
+→ **80% de ces menaces sont du bluff.**
+→ Un vrai avocat ne menace pas, il agit.
+
+**Défense :**
+1. **Ne réagissez pas émotionnellement.**
+2. **Consultez un vrai avocat** (gratuit : permanences juridiques).
+3. **Documentez tout** : SMS, emails, enregistrements (légaux en France si vous êtes partie prenante).
+4. **Réponse type :** "Si tu souhaites des procédures légales, mon avocat te contactera."
+
+**Spécial Parents :**
+→ La garde est basée sur **l'intérêt de l'enfant**, pas sur les cris du manipulateur.
+→ Un parent qui menace de retirer l'enfant montre son instabilité au juge.`;
+        }
+
         // Réponse par défaut
         return `### 💬 Analyse de Votre Situation
 
