@@ -59,9 +59,20 @@ document.addEventListener('DOMContentLoaded', () => {
     // Version Check
     console.log("Dark Empathy Shield v3.0 (Astral Pro) Loaded");
 
+    // Freemium Logic
+    const MAX_FREE_MESSAGES = 1;
+    let messageCount = parseInt(localStorage.getItem('dark_empathy_msg_count') || '0');
+    let isPremium = localStorage.getItem('dark_empathy_premium') === 'true';
+
     async function handleSend() {
         const text = userInput.value.trim();
         if (!text) return;
+
+        // Check Paywall
+        if (!isPremium && messageCount >= MAX_FREE_MESSAGES) {
+            showPaywall();
+            return;
+        }
 
         if (welcomeScreen && !welcomeScreen.classList.contains('hidden')) {
             welcomeScreen.classList.add('hidden');
@@ -70,6 +81,12 @@ document.addEventListener('DOMContentLoaded', () => {
         addMessage(text, 'user');
         userInput.value = '';
         userInput.style.height = 'auto';
+
+        // Increment Count
+        if (!isPremium) {
+            messageCount++;
+            localStorage.setItem('dark_empathy_msg_count', messageCount.toString());
+        }
 
         const typingId = showTyping();
 
@@ -100,6 +117,14 @@ document.addEventListener('DOMContentLoaded', () => {
             const response = getLocalResponse(text);
             addMessage(response, 'bot');
         }, 800);
+    }
+
+    function showPaywall() {
+        const modal = document.getElementById('paywall-modal');
+        if (modal) {
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
     }
 
     async function callAI(prompt, apiKey) {
