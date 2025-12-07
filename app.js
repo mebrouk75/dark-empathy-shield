@@ -70,15 +70,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Faux souci / Inquiétude manipulatrice
                 { pattern: /inqui[èe]te|peur (que|pour)|crainte|souci/i, score: 2, type: "faux_souci" },
                 // Infantilisation / Doute sur capacités
-                { pattern: /sensible|fragile|pas pr[êe]t|pas les [ée]paules|trop/i, score: 3, type: "infantilisation" },
+                { pattern: /sensible|fragile|pas pr[êe]t|pas les [ée]paules|trop|[ée]puis[ée]|repose-toi|fatig/i, score: 3, type: "infantilisation" },
                 // Dette émotionnelle
-                { pattern: /comme d.habitude|toujours l[àa]|encore une fois|je serai l[àa]/i, score: 3, type: "dette" },
+                { pattern: /comme d.habitude|toujours l[àa]|encore une fois|je serai l[àa]|pas besoin de (me )?remerci/i, score: 3, type: "dette" },
                 // Sabotage de succès
                 { pattern: /pression|trop (grand|gros)|[ée]chec|craquer|tomb/i, score: 2, type: "sabotage" },
                 // Fausse intimité
                 { pattern: /je te connais|je sais (que|comment)|[àa] quel point/i, score: 2, type: "intimite_feinte" },
                 // Paternalisme
-                { pattern: /prot[ée]ger|[ée]viter|m.occup/i, score: 2, type: "paternalisme" }
+                { pattern: /prot[ée]ger|[ée]viter|te couvrir|m.occup/i, score: 2, type: "paternalisme" },
+                // Sabotage professionnel / Vol de crédit
+                { pattern: /j.ai corrig[ée]|version finale.*mienne|j.ai envoy[ée].*boss|petites erreurs/i, score: 4, type: "sabotage_pro" },
+                // Compliment sandwich (bravo + MAIS)
+                { pattern: /bravo.{1,100}(mais|quelques|petite)/i, score: 2, type: "compliment_sandwich" }
             ];
 
             let totalScore = 0;
@@ -121,6 +125,15 @@ ${detectedTypes.includes('faux_souci') ? `
 ` : ''}${detectedTypes.includes('paternalisme') ? `
 • **Paternalisme** : "Je veux te protéger"
 → Il se place en **parent**, pas en partenaire égal.
+` : ''}${detectedTypes.includes('sabotage_pro') ? `
+• **Sabotage Professionnel** : "J'ai corrigé", "version finale (la mienne)", "j'ai envoyé au boss"
+→ Il **vole votre crédit** en se plaçant comme sauveur.
+→ Il vous **infantilise** en "corrigeant" sans demander.
+→ Il **s'approprie votre travail** auprès de la hiérarchie.
+` : ''}${detectedTypes.includes('compliment_sandwich') ? `
+• **Compliment Sandwich** : "Bravo MAIS il y avait des erreurs"
+→ Le compliment est juste là pour **adoucir la critique**.
+→ Ce dont vous vous souviendrez : **Les erreurs**, pas le "bravo".
 ` : ''}
 
 ---
