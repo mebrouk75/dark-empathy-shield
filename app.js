@@ -13,6 +13,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const toastContainer = document.getElementById('toast-container');
 
     // Load saved API key
+    // Load saved API key or use Default
+    const DEFAULT_API_KEY = 'AIzaSyCCSC1-6oyLsYoCtnwhZvDharhhrWYnL_4';
     const savedKey = localStorage.getItem('gemini_api_key');
     if (savedKey && apiKeyInput) {
         apiKeyInput.value = savedKey;
@@ -100,8 +102,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const typingId = showTyping();
 
-        // Try API first if key exists
-        const apiKey = localStorage.getItem('gemini_api_key');
+        // Try API first (User key OR Default key)
+        const apiKey = localStorage.getItem('gemini_api_key') || DEFAULT_API_KEY;
 
         if (apiKey) {
             try {
