@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Load saved API key
     // Load saved API key or use Default
     const DEFAULT_API_KEY = 'AIzaSyBtzgUyJ3uLH7G5UII5hX5iTwwZmu1viy4';
-    const savedKey = localStorage.getItem('gemini_api_key');
+    const savedKey = localStorage.getItem('gemini_api_key_v3');
     if (savedKey && apiKeyInput) {
         apiKeyInput.value = savedKey;
     }
@@ -103,7 +103,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const typingId = showTyping();
 
         // Try API first (User key OR Default key)
-        const apiKey = localStorage.getItem('gemini_api_key') || DEFAULT_API_KEY;
+        const apiKey = localStorage.getItem('gemini_api_key_v3') || DEFAULT_API_KEY;
 
         if (apiKey) {
             try {
@@ -182,7 +182,7 @@ document.addEventListener('DOMContentLoaded', () => {
         TON STYLE : Professionnel, direct, empathique mais ferme. Pas de moralisation.
         FORMAT : Utilise le Markdown. Sois concis.`;
 
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
