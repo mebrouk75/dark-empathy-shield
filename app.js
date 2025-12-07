@@ -390,6 +390,287 @@ Les manipulateurs utilisent les **menaces légales** pour terroriser.
 → Un parent qui menace de retirer l'enfant montre son instabilité au juge.`;
         }
 
+        // DARVO (Deny, Attack, Reverse Victim & Offender)
+        if (lower.includes('darvo') || (lower.includes('inverse') && lower.includes('victime'))) {
+            return `### 🔄 DARVO (Inversion Victime/Agresseur)
+
+**D**eny (Nier) → **A**ttack (Attaquer) → **R**everse **V**ictim & **O**ffender (Inverser les rôles)
+
+**Exemple concret :**
+1. **Vous** : "Tu m'as crié dessus hier."
+2. **Lui (Deny)** : "Ça ne s'est pas passé comme ça."
+3. **Lui (Attack)** : "Tu es trop sensible, tu inventes des choses."
+4. **Lui (Reverse)** : "C'est TOI qui m'agresses en me reprochant ça constamment."
+
+**Résultat :** Vous vous excusez alors que VOUS êtes la victime.
+
+**Défense :**
+→ **Ne justifiez pas.** Si vous savez ce qui s'est passé, tenez bon.
+→ **Réponse** : "Je ne vais pas débattre de ma réalité."`;
+        }
+
+        // Future Faking (Promesses fantômes)
+        if (lower.includes('future fak') || lower.includes('promesse') || lower.includes('futur')) {
+            return `### 🔮 Future Faking (Promesses Fantômes)
+
+Promettre un **futur idéalisé** qui n'arrivera jamais.
+
+**Exemples :**
+• "On va se marier l'année prochaine."
+• "Je vais changer, je te promets."
+• "On fera ce voyage dont tu rêves."
+• "Bientôt je quitterai ma femme/mon mari."
+
+**Mais... rien ne se concrétise jamais.**
+
+**Objectif :**
+→ Vous garder **accroché(e)** à un espoir.
+→ Reporter vos attentes à l'infini.
+
+**Défense :**
+→ **Exigez des actes, pas des paroles.**
+→ **Deadline** : "Si rien ne bouge d'ici X mois, je pars."`;
+        }
+
+        // Breadcrumbing (Miettes)
+        if (lower.includes('breadcrumb') || lower.includes('miette')) {
+            return `### 🍞 Breadcrumbing (Miettes d'Attention)
+
+Donner **juste assez** d'attention pour vous garder intéressé(e), mais **jamais assez** pour vous satisfaire.
+
+**Signes :**
+• Messages sporadiques : "Coucou, tu me manques" (puis silence pendant 1 semaine).
+• Projets vagues : "On devrait se voir un jour."
+• Refus d'engagement concret.
+
+**Objectif :**
+→ Vous garder en **option** sans effort.
+
+**Défense :**
+→ **Exigez de la cohérence.**
+→ "Je ne suis pas une option, je veux une relation claire."`;
+        }
+
+        // Negging (Compliments empoisonnés)
+        if (lower.includes('negging') || (lower.includes('compliment') && lower.includes('insult'))) {
+            return `### 💀 Negging (Compliments Empoisonnés)
+
+**Backhanded compliment** : Compliment qui cache une insulte.
+
+**Exemples :**
+• "T'es jolie pour une fille de ta taille."
+• "T'es intelligent(e) pour quelqu'un qui n'a pas fait d'études."
+• "J'aime que tu sois naturelle (= tu ne fais pas d'efforts)."
+• "T'es courageuse de porter ça."
+
+**Objectif :**
+→ Baisser votre **estime de vous** tout en semblant gentil.
+→ Créer de l'insécurité pour vous contrôler.
+
+**Défense :**
+→ **Appelez-le** : "Qu'est-ce que tu veux dire exactement ?"
+→ **Partez** si c'est récurrent.`;
+        }
+
+        // Flying Monkeys (Alliés recrutés)
+        if (lower.includes('flying monk') || lower.includes('alli') || lower.includes('entourage')) {
+            return `### 🐵 Flying Monkeys (Alliés Manipulés)
+
+**Personnes recrutées** par le manipulateur pour vous harceler/surveiller.
+
+**Qui ce peut être :**
+• Famille
+• Amis communs
+• Nouveaux partenaires
+• Thérapeutes mal informés
+
+**Comment ils agissent :**
+• "Il/Elle m'a dit que tu lui faisais du mal..."
+• "Tu devrais lui pardonner, il/elle a changé."
+• Espionnage : Rapportent vos faits et gestes au manipulateur.
+
+**Défense :**
+→ **Information limitée** : Ne partagez rien de sensible avec l'entourage commun.
+→ **Bloc ferme** : "Je ne veux pas en discuter."
+→ **Grey Rock** : Soyez ennuyeux, ne donnez pas de matière.`;
+        }
+
+        // Smear Campaign (Diffamation)
+        if (lower.includes('smear') || lower.includes('diffam') || lower.includes('réputation')) {
+            return `### 📣 Smear Campaign (Campagne de Diffamation)
+
+Le manipulateur **détruit votre réputation** avant que vous ne parliez.
+
+**Tactiques :**
+• Raconter SA version à tout le monde en premier.
+• Vous peindre comme "fou/folle", "agressif/ve", "menteur/se".
+• Utiliser des demi-vérités déformées.
+
+**Objectif :**
+→ **Isoler** : Personne ne vous croira.
+→ **Contrôler le récit**.
+
+**Défense :**
+→ **Ne vous défendez pas publiquement** (ça confirme son récit).
+→ **Vos vrais amis** verront la vérité avec le temps.
+→ **Documentez tout** (pour preuve si nécessaire).`;
+        }
+
+        // Projection
+        if (lower.includes('projection') || (lower.includes('accuse') && lower.includes('fait'))) {
+            return `### 🪞 Projection
+
+**T'accuser de ce qu'il fait lui-même.**
+
+**Exemples :**
+• Il vous trompe → "Je suis sûr(e) que TU me trompes."
+• Il ment → "Tu mens tout le temps."
+• Il est toxique → "Tu es toxique."
+
+**Objectif :**
+→ **Dévier l'attention** de ses actes.
+→ Vous mettre sur la défensive.
+
+**Défense :**
+→ **N'entrez pas dans le débat.**
+→ "Je ne vais pas me défendre d'accusations sans fondement."`;
+        }
+
+        // Word Salad (Confusion verbale)
+        if (lower.includes('word salad') || lower.includes('confus') || lower.includes('incompréhensible')) {
+            return `### 🥗 Word Salad (Salade de Mots)
+
+Discours **volontairement confus** pour vous déstabiliser.
+
+**Signes :**
+• Change de sujet constamment.
+• Phrases contradictoires.
+• Utilise votre confusion comme preuve que vous "ne comprenez rien".
+
+**Objectif :**
+→ **Épuisement mental**.
+→ Vous faire abandonner la conversation.
+
+**Défense :**
+→ **Recentrez** : "Revenons au sujet initial."
+→ **Écrit** : Exigez les discussions importantes par écrit (email/SMS).`;
+        }
+
+        // Baiting (Provocation)
+        if (lower.includes('bait') || lower.includes('provoc')) {
+            return `### 🎣 Baiting (Provocation)
+
+**Vous pousser à bout** pour ensuite vous accuser d'être "fou/folle" ou "agressif/ve".
+
+**Exemples :**
+• Répéter la même phrase en boucle.
+• Toucher des sujets sensibles délibérément.
+• Nier des faits évidents jusqu'à ce que vous explosiez.
+
+**Objectif** : **Reactive Abuse** (voir ci-dessous).
+
+**Défense :**
+→ **Ne mordez pas à l'hameçon.**
+→ **Sortez de la pièce** avant d'exploser.`;
+        }
+
+        // Reactive Abuse
+        if (lower.includes('reactive') || (lower.includes('réact') && lower.includes('abuse'))) {
+            return `### 💥 Reactive Abuse (Abus Réactif)
+
+**Vous pousser à réagir violemment** pour ensuite vous pointer du doigt.
+
+**Scénario typique :**
+1. Il vous **provoque** (baiting) pendant des heures.
+2. Vous **explosez** (cris, pleurs, geste brusque).
+3. Il devient **calme** : "Tu vois ? TU es la personne violente."
+4. Il **utilise** cet incident contre vous (devant famille, tribunal, thérapeute).
+
+**Défense :**
+→ **Identifiez le pattern** : Si vous êtes "poussé(e) à bout" régulièrement, c'est volontaire.
+→ **Partez avant d'exploser.**
+→ **Enregistrez** (si légal) les provocations.`;
+        }
+
+        // Medical/Psychiatric Gaslighting
+        if (lower.includes('medical gaslight') || lower.includes('psy') || lower.includes('fou') || lower.includes('folle')) {
+            return `### 🩺 Medical Gaslighting (Psychiatrisation Abusive)
+
+**Vous faire passer pour mentalement instable.**
+
+**Phrases :**
+• "Tu es bipolaire."
+• "Tu devrais consulter un psy."
+• "Ta famille dit que tu es instable."
+• "C'est tes médicaments qui te rendent parano."
+
+**En réalité :** Vos réactions sont **NORMALES** face à de l'abus.
+
+**Défense :**
+→ **Consultez VOTRE psy** (pas celui qu'il suggère).
+→ Un bon thérapeute détectera la manipulation.`;
+        }
+
+        // Financial Abuse
+        if (lower.includes('financ') || lower.includes('argent') || (lower.includes('contrôle') && lower.includes('banque'))) {
+            return `### 💰 Financial Abuse (Contrôle Financier)
+
+**Vous rendre financièrement dépendant(e).**
+
+**Tactiques :**
+• Vous empêcher de travailler.
+• Contrôler tous les comptes bancaires.
+• Vous forcer à demander de l'argent pour tout.
+• Cacher vos ressources.
+
+**Objectif :**
+→ **Vous piéger** : "Sans argent, tu ne peux pas partir."
+
+**Défense (Préparation) :**
+→ **Compte secret** si possible.
+→ **Documents cachés** (papiers d'identité, relevés).
+→ **Aide juridique** : Associations spécialisées (3919).`;
+        }
+
+        // Isolation
+        if (lower.includes('isol') || (lower.includes('coupé') && (lower.includes('ami') || lower.includes('famille')))) {
+            return `### 🏝️ Isolation (Couper les Liens)
+
+**Vous séparer** de votre réseau de soutien.
+
+**Méthodes :**
+• "Ta famille te manipule."
+• "Tes amis sont toxiques."
+• Crises chaque fois que vous voyez quelqu'un.
+• Déménagement loin de votre entourage.
+
+**Objectif :**
+→ **Vous affaiblir** : Sans soutien, plus facile à contrôler.
+
+**Défense :**
+→ **Maintenez le contact** coûte que coûte (même en secret).
+→ **Signal d'alarme** : Si une relation vous isole, c'est toxique.`;
+        }
+
+        // Double Bind (Double contrainte)
+        if (lower.includes('double bind') || lower.includes('double contrainte') || lower.includes('piège')) {
+            return `### ⚖️ Double Bind (Double Contrainte / Piège Lose-Lose)
+
+**Vous mettre dans une situation où vous avez tort quoi que vous fassiez.**
+
+**Exemples :**
+• "Pourquoi tu ne me parles plus ?" → Vous parlez → "Arrête de me harceler !"
+• "Sois spontané(e) !" (ordre paradoxal : si vous obéissez, ce n'est plus spontané).
+• "Pourquoi tu ne me fais jamais confiance ?" (alors qu'il ment constamment).
+
+**Objectif :**
+→ **Confusion et impuissance.**
+
+**Défense :**
+→ **Nommez-le** : "C'est un piège. Quoi que je fasse, j'ai tort."
+→ **Refusez de jouer** : "Je ne vais pas entrer dans cette logique."`;
+        }
+
         // Réponse par défaut
         return `### 💬 Analyse de Votre Situation
 
