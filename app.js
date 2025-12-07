@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log("Dark Empathy Shield v3.0 (Astral Pro) Loaded");
 
     // Freemium Logic
-    const MAX_FREE_MESSAGES = 1;
+    const MAX_FREE_MESSAGES = 3;
     let messageCount = parseInt(localStorage.getItem('dark_empathy_msg_count') || '0');
     let isPremium = localStorage.getItem('dark_empathy_premium') === 'true';
 
