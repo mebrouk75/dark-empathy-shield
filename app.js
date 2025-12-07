@@ -64,7 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Freemium Logic
     const MAX_FREE_MESSAGES = 3;
     let messageCount = parseInt(localStorage.getItem('dark_empathy_msg_count') || '0');
-    let isPremium = false;
+    let isPremium = localStorage.getItem('dark_empathy_premium') === 'true'; // Check permanent flag first
 
     // Check Premium Status & Expiry
     const premiumExpiry = localStorage.getItem('dark_empathy_premium_expiry');
@@ -147,8 +147,18 @@ document.addEventListener('DOMContentLoaded', () => {
                     const code = codeInput.value.trim().toUpperCase();
                     // HARDCODED CODES (To be replaced by real backend later)
                     const validCodes = ['DARK30', 'VIP2025', 'ASTRAL'];
+                    const adminCodes = ['MEHDI_BOSS', 'ADMIN'];
 
-                    if (validCodes.includes(code)) {
+                    if (adminCodes.includes(code)) {
+                        // ADMIN UNLOCK (PERMANENT)
+                        localStorage.setItem('dark_empathy_premium', 'true'); // Permanent flag
+                        localStorage.removeItem('dark_empathy_premium_expiry'); // Remove timer
+                        isPremium = true;
+
+                        modal.classList.add('hidden');
+                        modal.classList.remove('flex');
+                        showToast("Mode Admin Activé 👑", "success");
+                    } else if (validCodes.includes(code)) {
                         // UNLOCK FOR 30 MINUTES
                         const expiry = Date.now() + (30 * 60 * 1000); // 30 mins
                         localStorage.setItem('dark_empathy_premium_expiry', expiry.toString());
