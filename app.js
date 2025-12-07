@@ -95,8 +95,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // Demande de précision / détails (version ultra-détaillée)
-        if ((lower.includes('précis') || lower.includes('preci') || lower.includes('détail') || lower.includes('detail') || lower.includes('exemple') || lower.includes('concret')) &&
-            (lower.includes('dark') || lower.includes('empathie') || lower.includes('manipul'))) {
+        // Déclenche si "précis/détail/exemple" est mentionné seul OU avec dark/empathy
+        if (lower.includes('précis') || lower.includes('preci') || lower.includes('détail') || lower.includes('detail') ||
+            (lower.includes('exemple') && lower.includes('concret'))) {
             return `### 🎓 Dark Empathy : MANUEL ULTRA-DÉTAILLÉ (Exemples Concrets)
 
 ---
