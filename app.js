@@ -556,7 +556,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function callAI(prompt) {
         // Construct System Prompt (Simplified for stability)
-        const systemPrompt = `Tu es ASTRAL, un expert en psychologie et défense contre la manipulation.
+        const systemPrompt = `Tu es DARK EMPATHY, un expert en psychologie et défense contre la manipulation.
         TON RÔLE : Analyser les messages, détecter la toxicité, et donner des conseils de défense concrets.
         TON STYLE : Professionnel, direct, empathique mais ferme. Pas de moralisation.
         FORMAT : Utilise le Markdown. Sois concis.`;
