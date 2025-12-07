@@ -462,160 +462,232 @@ Ajoute systématiquement cet avertissement :
 ❤️ **RAPPEL CRUCIAL (DÉCULPABILISATION) :**
 Ajoute toujours cette note si la victime est blâmée :
 "Tu n'es pas la cause de cette toxicité. C'est une stratégie de l'autre pour se réguler. Laisse la culpabilité à celui qui l'a créée."
-`;
+```
+// ASTRAL PRO - Core Logic
+// Handles UI interactions, API calls, and local fallback
 
-try {
-    // Appel au serveur Vercel (utilise la clé GEMINI_API_KEY définie dans Vercel)
-    const response = await fetch('/api/groq', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            systemPrompt: systemPrompt,
-            userMessage: "MESSAGE À ANALYSER : " + prompt
-        })
+document.addEventListener('DOMContentLoaded', () => {
+    // UI Elements
+    const chatContainer = document.getElementById('chat-container');
+    const userInput = document.getElementById('user-input');
+    const sendBtn = document.getElementById('send-btn');
+    const settingsBtn = document.getElementById('settings-btn');
+    const settingsModal = document.getElementById('settings-modal');
+    const closeSettingsBtn = document.getElementById('close-settings');
+    const saveSettingsBtn = document.getElementById('save-settings');
+    const apiKeyInput = document.getElementById('api-key-input');
+    const voiceBtn = document.getElementById('voice-btn');
+    const welcomeScreen = document.getElementById('welcome-screen');
+    const statusIndicator = document.getElementById('status-indicator');
+
+    // State
+    let apiKey = localStorage.getItem('gemini_api_key');
+    if (apiKey && apiKeyInput) apiKeyInput.value = apiKey;
+
+    // Auto-resize textarea
+    userInput.addEventListener('input', function () {
+        this.style.height = 'auto';
+        this.style.height = (this.scrollHeight) + 'px';
     });
 
-    const data = await response.json();
+    // Event Listeners
+    sendBtn.addEventListener('click', handleSend);
+    userInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            handleSend();
+        }
+    });
 
-    if (data.error) {
-        console.error("API Error:", data.error);
-        addMessage("<strong style='color:#ef4444;'>⚠️ ERREUR API :</strong> " + data.error.message, "bot");
-        return null;
-    }
-
-    // Le serveur renvoie un format OpenAI-like
-    return data.choices?.[0]?.message?.content || "Pas de réponse";
-
-} catch (error) {
-    console.error("API Fetch Error:", error);
-
-    // --- MODE DÉMO (FALLBACK) ---
-    // Si l'API échoue, on utilise une réponse locale pour ne pas bloquer l'utilisateur
-    console.log("⚠️ Passage en mode DÉMO locale suite à erreur API");
-
-    const demoResponses = {
-        "dark": `🛡️ **DARK EMPATHY (Mode Démo)**
-            
-C'est la capacité de comprendre les émotions d'autrui non pour aider, mais pour manipuler.
-            
-• **Observer** : Scanner les failles.
-• **Simuler** : Feindre la compassion.
-• **Exploiter** : Frapper au bon endroit.`,
-
-        "narcissique": `🛡️ **NARCISSISME (Mode Démo)**
-            
-Le narcissique pathologique ne vous voit pas comme une personne, mais comme un objet (ressource).
-            
-• **Love Bombing** : Séduction intense.
-• **Dévaluation** : Critiques subtiles.
-• **Rejet** : Abandon brutal.`,
-
-        "default": `⚠️ **MODE HORS-LIGNE**
-            
-Je n'arrive pas à joindre le cerveau de l'IA (Problème de clé API).
-            
-Mais je suis toujours là. Pose-moi une question sur la **Dark Empathy**, le **Gaslighting** ou le **Silence Radio**.`
-    };
-
-    const lowerPrompt = prompt.toLowerCase();
-    if (lowerPrompt.includes("dark")) return demoResponses["dark"];
-    if (lowerPrompt.includes("narcissique") || lowerPrompt.includes("pn")) return demoResponses["narcissique"];
-
-    return demoResponses["default"];
-}
-}
-
-function consultBible(text) {
-    text = text.toLowerCase();
-
-    // 0. DETECT IF IT'S A LONG TEXT TO ANALYZE (SMS/Email)
-    if (text.split(' ').length > 15) {
-        // It's likely a message to analyze, not a chat
-        return analyzeLongText(text);
-    }
-
-    let bestMatch = null;
-    let maxScore = 0;
-
-    // 1. Search for triggers in the Bible (STRICT MATCHING)
-    for (const entry of DARK_BIBLE) {
-        let score = 0;
-
-        for (const trigger of entry.triggers) {
-            // Use Regex for whole word matching to avoid false positives
-            // e.g. avoid "sens" triggering on "je me sens"
-            const regex = new RegExp(`\\b${trigger} \\b`, 'i');
-            if (regex.test(text)) {
-                score++;
+    if (settingsBtn) {
+        settingsBtn.addEventListener('click', () => settingsModal.classList.remove('hidden'));
+        closeSettingsBtn.addEventListener('click', () => settingsModal.classList.add('hidden'));
+        saveSettingsBtn.addEventListener('click', () => {
+            const key = apiKeyInput.value.trim();
+            if (key) {
+                localStorage.setItem('gemini_api_key', key);
+                apiKey = key;
+                settingsModal.classList.add('hidden');
+                addMessage("Configuration sauvegardée. Système prêt.", "bot");
             }
+        });
+    }
+
+    // Suggestion buttons
+    document.querySelectorAll('.suggestion-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const text = btn.querySelector('div:last-child').textContent.replace(/"/g, '');
+            userInput.value = text;
+            handleSend();
+        });
+    });
+
+    async function handleSend() {
+        const text = userInput.value.trim();
+        if (!text) return;
+
+        // UI Updates
+        if (welcomeScreen && !welcomeScreen.classList.contains('hidden')) {
+            welcomeScreen.classList.add('hidden');
         }
 
-        // Boost score for "Violence" category
-        if (entry.id === "violence_physique" && score > 0) {
-            score += 100;
+        addMessage(text, 'user');
+        userInput.value = '';
+        userInput.style.height = 'auto';
+
+        // Show typing indicator
+        const typingId = showTyping();
+
+        try {
+            // 1. Try API Call
+            const response = await callAI(text);
+
+            removeTyping(typingId);
+            addMessage(response, 'bot');
+
+        } catch (error) {
+            // 2. Fallback to Local Logic (Never show error to user in PRO mode)
+            console.error("AI Error, switching to fallback:", error);
+            removeTyping(typingId);
+            const fallbackResponse = getFallbackResponse(text);
+            addMessage(fallbackResponse, 'bot');
+        }
+    }
+
+    async function callAI(prompt) {
+        // Construct System Prompt (Simplified for stability)
+        const systemPrompt = `Tu es ASTRAL, un expert en psychologie et défense contre la manipulation.
+        TON RÔLE : Analyser les messages, détecter la toxicité, et donner des conseils de défense concrets.
+        TON STYLE : Professionnel, direct, empathique mais ferme. Pas de moralisation.
+        FORMAT : Utilise le Markdown. Sois concis.`;
+
+        // Try Server Proxy first
+        try {
+            const response = await fetch('/api/index', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ systemPrompt, userMessage: prompt })
+            });
+
+            const data = await response.json();
+            if (data.choices && data.choices[0]) {
+                return data.choices[0].message.content;
+            }
+            throw new Error("Invalid Server Response");
+        } catch (e) {
+            // If Server fails, try Direct Client Call (if key exists)
+            if (apiKey) {
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: systemPrompt + "\n\nUser: " + prompt }] }]
+                    })
+                });
+                const data = await response.json();
+                return data.candidates?.[0]?.content?.parts?.[0]?.text || getFallbackResponse(prompt);
+            }
+            throw e; // Trigger fallback
+        }
+    }
+
+    function getFallbackResponse(text) {
+        const lower = text.toLowerCase();
+        if (lower.includes('dark') || lower.includes('empathie')) {
+            return `### 🛡️ Dark Empathy (Mode Hors-Ligne)
+            
+La **Dark Empathy** est une forme d'intelligence émotionnelle utilisée à des fins de manipulation. Contrairement à l'empathie compassionnelle, le "Dark Empath" comprend vos émotions mais ne les ressent pas pour vous aider.
+
+**Signes d'alerte :**
+*   Il sait exactement quoi dire pour vous blesser.
+*   Il alterne chaud et froid pour créer une dépendance.
+*   Il utilise vos confidences contre vous.`;
+        }
+        if (lower.includes('gaslight') || lower.includes('fou')) {
+            return `### 🔦 Gaslighting (Mode Hors-Ligne)
+            
+Le **Gaslighting** est une technique visant à vous faire douter de votre propre réalité et santé mentale.
+
+**Défense immédiate :**
+1.  **Ne justifiez pas** votre réalité.
+2.  **Notez les faits** (journal de bord).
+3.  **Répondez :** "Je ne suis pas d'accord avec ta version des faits, mais j'entends que c'est ce que tu penses."`;
+        }
+        return `### ⚠️ Analyse Limitée (Mode Hors-Ligne)
+        
+Je n'ai pas pu joindre le cerveau central (Problème de connexion ou de clé API).
+        
+Cependant, je peux vous dire ceci : **Si vous vous sentez confus, coupable ou épuisé après une interaction, c'est un signal d'alarme.**
+        
+Protégez votre énergie. Ne cherchez pas à "gagner" contre un manipulateur, cherchez à vous **désengager**.`;
+    }
+
+    function addMessage(text, sender) {
+        const div = document.createElement('div');
+        div.className = `p-4 rounded-2xl max-w-[85%] animate-fade-in ${sender === 'user' ? 'bg-primary text-white self-end ml-auto' : 'bg-surface border border-white/10 text-gray-100 self-start'}`;
+
+        if (sender === 'bot') {
+            div.innerHTML = marked.parse(text);
+            div.classList.add('prose', 'prose-invert', 'prose-sm', 'max-w-none');
+        } else {
+            div.textContent = text;
         }
 
-        if (score > maxScore) {
-            maxScore = score;
-            bestMatch = entry;
+        chatContainer.appendChild(div);
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
+
+    function showTyping() {
+        const div = document.createElement('div');
+        div.id = 'typing-indicator';
+        div.className = 'bg-surface border border-white/10 p-4 rounded-2xl self-start flex gap-1 w-16 items-center justify-center';
+        div.innerHTML = '<div class="w-2 h-2 bg-primary rounded-full typing-dot"></div><div class="w-2 h-2 bg-primary rounded-full typing-dot"></div><div class="w-2 h-2 bg-primary rounded-full typing-dot"></div>';
+        chatContainer.appendChild(div);
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+        return div;
+    }
+
+    function removeTyping(element) {
+        if (element && element.parentNode) {
+            element.parentNode.removeChild(element);
         }
     }
-
-    // 2. If no triggers found, use the "General" fallback
-    if (!bestMatch || maxScore === 0) {
-        bestMatch = DARK_BIBLE.find(e => e.id === "general");
+}); newIndex = Math.floor(Math.random() * responses.length);
     }
 
-    // 3. Select a response (ANTI-REPETITION)
-    const responses = bestMatch.response;
-    let newIndex;
+// Update state
+lastCategoryId = bestMatch.id;
+lastResponseIndex = newIndex;
 
-    // If we are in the same category as before, ensure we don't pick the same sentence
-    if (bestMatch.id === lastCategoryId) {
-        let attempts = 0;
-        do {
-            newIndex = Math.floor(Math.random() * responses.length);
-            attempts++;
-        } while (newIndex === lastResponseIndex && attempts < 10);
-    } else {
-        newIndex = Math.floor(Math.random() * responses.length);
-    }
+const analysisText = responses[newIndex];
 
-    // Update state
-    lastCategoryId = bestMatch.id;
-    lastResponseIndex = newIndex;
+// 4. CONSTRUCT THE "TOTAL ACTION" RESPONSE (HTML)
+// We want the bot to act like a friend who gives you the weapon immediately.
 
-    const analysisText = responses[newIndex];
+let html = "";
 
-    // 4. CONSTRUCT THE "TOTAL ACTION" RESPONSE (HTML)
-    // We want the bot to act like a friend who gives you the weapon immediately.
+// A. The Friend's Reaction (Intro)
+if (bestMatch.id === "violence_physique") {
+    html += `< strong >🛑 URGENCE:</strong > <br>`;
+} else if (bestMatch.id === "general") {
+    html += `<strong>🛡️ DARK EMPATHY :</strong><br>`;
+} else {
+    html += `<strong>💀 DÉCODAGE IMMÉDIAT :</strong><br>`;
+}
 
-    let html = "";
+// B. The Analysis (The Truth)
+html += `<em>"${analysisText}"</em><br><br>`;
 
-    // A. The Friend's Reaction (Intro)
-    if (bestMatch.id === "violence_physique") {
-        html += `< strong >🛑 URGENCE:</strong > <br>`;
-    } else if (bestMatch.id === "general") {
-        html += `<strong>🛡️ DARK EMPATHY :</strong><br>`;
-    } else {
-        html += `<strong>💀 DÉCODAGE IMMÉDIAT :</strong><br>`;
-    }
+// C. The Weapon (Counter-Attack) - "Il doit tout faire"
+if (bestMatch.counter_attack) {
+    html += `<strong>♟️ LA RIPOSTE (DARK ARTS) :</strong><br>`;
+    html += `Ne te laisse pas faire. Envoie-lui ça pour le calmer :<br>`;
+    html += `<div style="background:#1a1a1a; padding:15px; border-radius:8px; margin-top:5px; font-family:monospace; color:#e5e7eb; border-left: 3px solid #ef4444; font-style:italic;">`;
+    html += `"${bestMatch.counter_attack}"`;
+    html += `</div>`;
+}
 
-    // B. The Analysis (The Truth)
-    html += `<em>"${analysisText}"</em><br><br>`;
-
-    // C. The Weapon (Counter-Attack) - "Il doit tout faire"
-    if (bestMatch.counter_attack) {
-        html += `<strong>♟️ LA RIPOSTE (DARK ARTS) :</strong><br>`;
-        html += `Ne te laisse pas faire. Envoie-lui ça pour le calmer :<br>`;
-        html += `<div style="background:#1a1a1a; padding:15px; border-radius:8px; margin-top:5px; font-family:monospace; color:#e5e7eb; border-left: 3px solid #ef4444; font-style:italic;">`;
-        html += `"${bestMatch.counter_attack}"`;
-        html += `</div>`;
-    }
-
-    return html;
+return html;
 }
 
 function analyzeLongText(text) {
