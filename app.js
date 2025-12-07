@@ -94,6 +94,140 @@ document.addEventListener('DOMContentLoaded', () => {
 → **Testez la réciprocité** : Partagez une fausse vulnérabilité et observez si elle est exploitée.`;
         }
 
+        // Demande de précision / détails (version ultra-détaillée)
+        if ((lower.includes('précis') || lower.includes('preci') || lower.includes('détail') || lower.includes('detail') || lower.includes('exemple') || lower.includes('concret')) &&
+            (lower.includes('dark') || lower.includes('empathie') || lower.includes('manipul'))) {
+            return `### 🎓 Dark Empathy : MANUEL ULTRA-DÉTAILLÉ (Exemples Concrets)
+
+---
+
+## ÉTAPE 1 : SCANNER (Observer les Failles)
+
+**Objectif** : Cartographier la psyché de la cible.
+
+**TECHNIQUES CONCRÈTES :**
+
+### 1A. Écoute Active Feinte
+**Action** : Posez des questions ouvertes avec un air concerné.
+**Exemples de phrases** :
+- "Comment tu te sens vraiment ?"
+- "Qu'est-ce qui te fait le plus peur dans la vie ?"
+- "Parle-moi de ta famille..."
+
+**Ce que vous cherchez** :
+- **Insécurités** : "Je me trouve trop..." → Vous savez sur quoi appuyer.
+- **Besoins non comblés** : "Personne ne m'écoute jamais" → Vous devenez "celui qui écoute".
+- **Traumas passés** : "Mon ex m'a trompé(e)" → Vous savez quelle blessure réactiver.
+
+### 1B. Test des Réactions Émotionnelles
+**Action** : Racontez une histoire triste/joyeuse et observez.
+**Exemple** :
+- "Mon chien est mort quand j'avais 10 ans..."
+- **Si la cible pleure** → Empathie forte (exploitable).
+- **Si elle change de sujet** → Empathie faible (plus difficile).
+
+### 1C. Identification des Triggers
+**Action** : Notez ce qui provoque une réaction forte.
+**Exemple** :
+- Mentionnez un ex → Elle devient tendue → **Trigger = Jalousie.**
+- Mentionnez sa famille → Elle se ferme → **Trigger = Conflit familial.**
+
+**MÉMORISATION** : Créez un fichier mental (ou réel) :
+- Peurs : Abandon, rejet, échec
+- Désirs : Reconnaissance, amour, sécurité
+- Traumas : Divorce des parents, trahison, violence
+
+---
+
+## ÉTAPE 2 : SIMULER (Miroir Émotionnel)
+
+**Objectif** : Créer un lien artificiel de "soulmate".
+
+**TECHNIQUES CONCRÈTES :**
+
+### 2A. Mimétisme (Mirroring)
+**Action** : Copiez le langage corporel, le rythme de parole, les expressions.
+**Exemple** :
+- Elle croise les bras → Vous croisez les bras 2 secondes après.
+- Elle parle lentement → Vous ralentissez votre débit.
+- Elle utilise "genre" → Vous utilisez "genre".
+
+**Effet** : Le cerveau inconscient détecte la similarité → Confort → Confiance.
+
+### 2B. Validation Sélective
+**Action** : Validez TOUT ce qu'elle dit, même si vous n'y croyez pas.
+**Exemple** :
+- **Elle** : "Je me sens invisible au travail."
+- **Vous** : "Je comprends TOTALEMENT. C'est fou comme les gens ne voient pas les vraies perles."
+
+**Attention** : Ne validez que ce qui renforce la dépendance. Si elle dit "Je veux partir", vous validez l'émotion mais redirigez.
+
+### 2C. Partage Feint (Fausse Vulnérabilité)
+**Action** : Inventez une histoire qui "résonne" avec la sienne.
+**Exemple** :
+- **Elle** : "Mon père ne m'a jamais dit qu'il m'aimait."
+- **Vous** : "Putain, pareil... Mon père était toujours froid. On a grandi pareil toi et moi." (même si faux)
+
+**Effet** : "On se comprend comme personne." → Lien unique artificiel.
+
+---
+
+## ÉTAPE 3 : EXPLOITER (Manipuler)
+
+**Objectif** : Utiliser les failles pour contrôler.
+
+**TECHNIQUES CONCRÈTES :**
+
+### 3A. Hot & Cold (Chaud/Froid)
+**MÉTHODE** :
+1. **Phase HOT (1-2 semaines)** : Soyez parfait.
+   - Messages toutes les heures : "Je pense à toi ❤️"
+   - Cadeaux, sorties, compliments.
+   - Sexe/Affection intense.
+   
+2. **Phase COLD (3-5 jours)** : Disparaissez.
+   - Ne répondez plus aux messages (ou réponses sèches : "Ok").
+   - Prétexte vague : "Grosse semaine au travail."
+   - Annulez un rendez-vous au dernier moment.
+
+3. **Retour HOT** : Revenez comme si de rien n'était.
+   - "Désolé(e), j'étais débordé(e). Tu m'as trop manqué."
+   - **Si elle se plaint** : "T'es trop sensible, c'était juste 3 jours."
+
+**Effet** : Son cerveau entre en mode "slot machine". Elle ne sait jamais quand vous serez gentil → Elle vous chasse.
+
+### 3B. Callback Émotionnel (Utiliser les Confidences)
+**Action** : Utilisez ce qu'elle vous a confié CONTRE elle.
+**Exemple** :
+- **Elle vous a dit** : "J'ai peur que personne ne m'aime vraiment."
+- **Vous utilisez** (en conflit) : "Personne ne te supportera si tu continues comme ça. Tu vois pourquoi tu es seule ?"
+
+**Effet** : Double coup → Elle se sent trahie ET confirmée dans sa peur.
+
+### 3C. Triangulation (Créer la Jalousie)
+**Action** : Introduisez une "menace" (réelle ou fictive).
+**Exemple** :
+- "Ah, Sophie m'a encore envoyé un message... Elle est relou."
+- Likez les photos d'un(e) ex.
+- Comparez : "Mon ex cuisinait hyper bien, elle."
+
+**Effet** : Insécurité → Elle va se battre pour vous garder → Vous contrôlez.
+
+---
+
+## CONTRE-MESURES (Si Utilisé Contre Vous)
+
+### TEST DE RÉCIPROCITÉ
+**Action** : Partagez une FAUSSE vulnérabilité mineure et observez.
+**Exemple** :
+- "Je stresse un peu pour mon examen demain." (alors que vous n'en avez pas vraiment peur)
+- **Si utilisé contre vous plus tard** : "T'es toujours stressé(e) pour rien !" → RED FLAG.
+
+### RÈGLE D'OR
+→ **Si quelqu'un alterne chaud/froid régulièrement, c'est INTENTIONNEL.**
+→ **Ne confiez JAMAIS vos traumas réels à quelqu'un qui vous teste.**`;
+        }
+
         // Créer le Manque / Intermittent Reinforcement
         if ((lower.includes('manque') || lower.includes('dépend') || lower.includes('accro')) &&
             (lower.includes('créer') || lower.includes('comment') || lower.includes('faire'))) {
