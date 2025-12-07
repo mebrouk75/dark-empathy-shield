@@ -1,5 +1,4 @@
-// DARK EMPATHY - Local Standalone Version
-// No API needed - Pure JavaScript
+// DARK EMPATHY - Hybrid Version (API + Local Fallback)
 
 document.addEventListener('DOMContentLoaded', () => {
     const chatContainer = document.getElementById('chat-container');
@@ -8,7 +7,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const settingsBtn = document.getElementById('settings-btn');
     const settingsModal = document.getElementById('settings-modal');
     const closeSettingsBtn = document.getElementById('close-settings');
+    const saveSettingsBtn = document.getElementById('save-settings');
+    const apiKeyInput = document.getElementById('api-key-input');
     const welcomeScreen = document.getElementById('welcome-screen');
+
+    // Load saved API key
+    const savedKey = localStorage.getItem('gemini_api_key');
+    if (savedKey && apiKeyInput) {
+        apiKeyInput.value = savedKey;
+    }
 
     // Auto-resize textarea
     userInput.addEventListener('input', function () {
@@ -28,6 +35,15 @@ document.addEventListener('DOMContentLoaded', () => {
     if (settingsBtn) {
         settingsBtn.addEventListener('click', () => settingsModal.classList.remove('hidden'));
         closeSettingsBtn.addEventListener('click', () => settingsModal.classList.add('hidden'));
+
+        saveSettingsBtn.addEventListener('click', () => {
+            const key = apiKeyInput.value.trim();
+            if (key) {
+                localStorage.setItem('gemini_api_key', key);
+                alert('Clé API sauvegardée !');
+                settingsModal.classList.add('hidden');
+            }
+        });
     }
 
     // Suggestion buttons
@@ -39,7 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    function handleSend() {
+    async function handleSend() {
         const text = userInput.value.trim();
         if (!text) return;
 
@@ -53,6 +69,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const typingId = showTyping();
 
+        // Try API first if key exists
+        const apiKey = localStorage.getItem('gemini_api_key');
+
+        if (apiKey) {
+            try {
+                const apiResponse = await callAI(text, apiKey);
+                removeTyping(typingId);
+                addMessage(apiResponse, 'bot');
+                return;
+            } catch (error) {
+                console.error("API Error, falling back to local:", error);
+                // Fallback to local below
+            }
+        }
+
+        // Local Fallback (Simulated Delay)
         setTimeout(() => {
             removeTyping(typingId);
             const response = getLocalResponse(text);
@@ -60,28 +92,45 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 800);
     }
 
+    async function callAI(prompt, apiKey) {
+        const systemPrompt = `Tu es DARK EMPATHY, un expert en psychologie et défense contre la manipulation.
+        TON RÔLE : Analyser les messages, détecter la toxicité, et donner des conseils de défense concrets.
+        TON STYLE : Professionnel, direct, empathique mais ferme. Pas de moralisation.
+        FORMAT : Utilise le Markdown. Sois concis.`;
+
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                contents: [{
+                    parts: [{ text: systemPrompt + "\n\nUSER: " + prompt }]
+                }]
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error('API Request Failed');
+        }
+
+        const data = await response.json();
+        return data.candidates[0].content.parts[0].text;
+    }
+
     function getLocalResponse(text) {
         const lower = text.toLowerCase();
 
         // Analyse de MESSAGE LONG (SMS/Email à analyser)
-        // Si le texte fait plus de 100 caractères ET contient des patterns suspects
         if (text.length > 100) {
             const suspiciousPatterns = [
-                // Faux souci / Inquiétude manipulatrice
                 { pattern: /inqui[èe]te|peur (que|pour)|crainte|souci/i, score: 2, type: "faux_souci" },
-                // Infantilisation / Doute sur capacités
                 { pattern: /sensible|fragile|pas pr[êe]t|pas les [ée]paules|trop|[ée]puis[ée]|repose-toi|fatig/i, score: 3, type: "infantilisation" },
-                // Dette émotionnelle
                 { pattern: /comme d.habitude|toujours l[àa]|encore une fois|je serai l[àa]|pas besoin de (me )?remerci/i, score: 3, type: "dette" },
-                // Sabotage de succès
                 { pattern: /pression|trop (grand|gros)|[ée]chec|craquer|tomb/i, score: 2, type: "sabotage" },
-                // Fausse intimité
                 { pattern: /je te connais|je sais (que|comment)|[àa] quel point/i, score: 2, type: "intimite_feinte" },
-                // Paternalisme
                 { pattern: /prot[ée]ger|[ée]viter|te couvrir|m.occup/i, score: 2, type: "paternalisme" },
-                // Sabotage professionnel / Vol de crédit
                 { pattern: /j.ai corrig[ée]|version finale.*mienne|j.ai envoy[ée].*boss|petites erreurs/i, score: 4, type: "sabotage_pro" },
-                // Compliment sandwich (bravo + MAIS)
                 { pattern: /bravo.{1,100}(mais|quelques|petite)/i, score: 2, type: "compliment_sandwich" }
             ];
 
@@ -91,13 +140,10 @@ document.addEventListener('DOMContentLoaded', () => {
             suspiciousPatterns.forEach(p => {
                 if (p.pattern.test(text)) {
                     totalScore += p.score;
-                    if (!detectedTypes.includes(p.type)) {
-                        detectedTypes.push(p.type);
-                    }
+                    if (!detectedTypes.includes(p.type)) detectedTypes.push(p.type);
                 }
             });
 
-            // Si score >= 6, c'est suspect
             if (totalScore >= 6) {
                 return `### 🚨 ALERTE : MESSAGE MANIPULATEUR DÉTECTÉ
 
@@ -107,63 +153,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
 **TECHNIQUES UTILISÉES :**
 
-${detectedTypes.includes('faux_souci') ? `
-• **Faux Souci** : "J'ai peur pour toi", "ça m'inquiète"
-→ Il fait semblant de s'inquiéter pour **saboter votre succès**.
-` : ''}${detectedTypes.includes('infantilisation') ? `
-• **Infantilisation** : "Tu es sensible", "tu n'as pas les épaules"
-→ Il vous traite comme un **enfant incapable** de décider.
-` : ''}${detectedTypes.includes('sabotage') ? `
-• **Sabotage de Succès** : "Pression monstre", "si ça craque"
-→ Au lieu de vous encourager, il **amplifie les risques**.
-` : ''}${detectedTypes.includes('dette') ? `
-• **Dette Émotionnelle** : "Je serai là pour ramasser les morceaux **comme d'habitude**"
-→ Il vous rappelle que vous lui **devez** quelque chose.
-` : ''}${detectedTypes.includes('intimite_feinte') ? `
-• **Fausse Intimité** : "Je te connais par cœur"
-→ Il utilise la proximité pour **justifier son contrôle**.
-` : ''}${detectedTypes.includes('paternalisme') ? `
-• **Paternalisme** : "Je veux te protéger"
-→ Il se place en **parent**, pas en partenaire égal.
-` : ''}${detectedTypes.includes('sabotage_pro') ? `
-• **Sabotage Professionnel** : "J'ai corrigé", "version finale (la mienne)", "j'ai envoyé au boss"
-→ Il **vole votre crédit** en se plaçant comme sauveur.
-→ Il vous **infantilise** en "corrigeant" sans demander.
-→ Il **s'approprie votre travail** auprès de la hiérarchie.
-` : ''}${detectedTypes.includes('compliment_sandwich') ? `
-• **Compliment Sandwich** : "Bravo MAIS il y avait des erreurs"
-→ Le compliment est juste là pour **adoucir la critique**.
-→ Ce dont vous vous souviendrez : **Les erreurs**, pas le "bravo".
-` : ''}
-
----
-
-**CE QUE CE MESSAGE FAIT RÉELLEMENT :**
-1. **Sape votre confiance** au moment où vous êtes fier(e).
-2. **Vous fait douter** de votre capacité à réussir.
-3. **Crée de la culpabilité** si vous osez y aller malgré "son avis".
-
-**VÉRITÉ :**
-→ Une personne qui vous aime VRAIMENT dit : **"Je crois en toi, tu vas assurer !"**
-→ Elle ne dit PAS : "T'es trop fragile, ça va mal finir."
+${detectedTypes.includes('faux_souci') ? `• **Faux Souci** : "J'ai peur pour toi", "ça m'inquiète"\n→ Il fait semblant de s'inquiéter pour **saboter votre succès**.\n` : ''}${detectedTypes.includes('infantilisation') ? `• **Infantilisation** : "Tu es sensible", "tu n'as pas les épaules"\n→ Il vous traite comme un **enfant incapable** de décider.\n` : ''}${detectedTypes.includes('sabotage') ? `• **Sabotage de Succès** : "Pression monstre", "si ça craque"\n→ Au lieu de vous encourager, il **amplifie les risques**.\n` : ''}${detectedTypes.includes('dette') ? `• **Dette Émotionnelle** : "Je serai là pour ramasser les morceaux **comme d'habitude**"\n→ Il vous rappelle que vous lui **devez** quelque chose.\n` : ''}${detectedTypes.includes('intimite_feinte') ? `• **Fausse Intimité** : "Je te connais par cœur"\n→ Il utilise la proximité pour **justifier son contrôle**.\n` : ''}${detectedTypes.includes('paternalisme') ? `• **Paternalisme** : "Je veux te protéger"\n→ Il se place en **parent**, pas en partenaire égal.\n` : ''}${detectedTypes.includes('sabotage_pro') ? `• **Sabotage Professionnel** : "J'ai corrigé", "version finale (la mienne)"\n→ Il **vole votre crédit** et vous **infantilise**.\n` : ''}${detectedTypes.includes('compliment_sandwich') ? `• **Compliment Sandwich** : "Bravo MAIS..."\n→ Le compliment sert juste à faire passer la critique.\n` : ''}
 
 ---
 
 **RÉPONSE RECOMMANDÉE :**
 
 **Option 1 (Ferme)** :
-"Merci pour ton inquiétude, mais j'ai confiance en moi. Je prends cette opportunité."
+"Merci pour ton inquiétude, mais j'ai confiance en moi."
 
 **Option 2 (Frontale)** :
-"J'ai besoin de soutien, pas de doutes. Si tu ne peux pas m'encourager, abstiens-toi."
-
-**Option 3 (Silence)** :
-Ne répondez pas. Prouvez-lui que vous pouvez réussir sans son "avis".`;
+"J'ai besoin de soutien, pas de doutes."`;
             }
         }
 
         // Apprentissage / Comment faire Dark Empathy
-        // Ultra-permissif : détecte "apprend", "enseigne", "montre", etc. même sans "dark empathy"
         if (lower.includes('apprend') || lower.includes('enseigne') || lower.includes('montre') ||
             lower.includes('comment faire') || lower.includes('comment ça marche')) {
             return `### 🎓 Dark Empathy : Les Mécaniques (Manuel Technique)
@@ -195,7 +199,6 @@ Ne répondez pas. Prouvez-lui que vous pouvez réussir sans son "avis".`;
         }
 
         // Demande de précision / détails (version ultra-détaillée)
-        // Déclenche si "précis/détail/exemple" est mentionné seul OU avec dark/empathy
         if (lower.includes('précis') || lower.includes('preci') || lower.includes('détail') || lower.includes('detail') ||
             (lower.includes('exemple') && lower.includes('concret'))) {
             return `### 🎓 Dark Empathy : MANUEL ULTRA-DÉTAILLÉ (Exemples Concrets)
