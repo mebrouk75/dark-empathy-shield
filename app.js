@@ -63,6 +63,92 @@ document.addEventListener('DOMContentLoaded', () => {
     function getLocalResponse(text) {
         const lower = text.toLowerCase();
 
+        // Analyse de MESSAGE LONG (SMS/Email à analyser)
+        // Si le texte fait plus de 100 caractères ET contient des patterns suspects
+        if (text.length > 100) {
+            const suspiciousPatterns = [
+                // Faux souci / Inquiétude manipulatrice
+                { pattern: /inqui[èe]te|peur (que|pour)|crainte|souci/i, score: 2, type: "faux_souci" },
+                // Infantilisation / Doute sur capacités
+                { pattern: /sensible|fragile|pas pr[êe]t|pas les [ée]paules|trop/i, score: 3, type: "infantilisation" },
+                // Dette émotionnelle
+                { pattern: /comme d.habitude|toujours l[àa]|encore une fois|je serai l[àa]/i, score: 3, type: "dette" },
+                // Sabotage de succès
+                { pattern: /pression|trop (grand|gros)|[ée]chec|craquer|tomb/i, score: 2, type: "sabotage" },
+                // Fausse intimité
+                { pattern: /je te connais|je sais (que|comment)|[àa] quel point/i, score: 2, type: "intimite_feinte" },
+                // Paternalisme
+                { pattern: /prot[ée]ger|[ée]viter|m.occup/i, score: 2, type: "paternalisme" }
+            ];
+
+            let totalScore = 0;
+            let detectedTypes = [];
+
+            suspiciousPatterns.forEach(p => {
+                if (p.pattern.test(text)) {
+                    totalScore += p.score;
+                    if (!detectedTypes.includes(p.type)) {
+                        detectedTypes.push(p.type);
+                    }
+                }
+            });
+
+            // Si score >= 6, c'est suspect
+            if (totalScore >= 6) {
+                return `### 🚨 ALERTE : MESSAGE MANIPULATEUR DÉTECTÉ
+
+**Analyse du message que vous avez reçu :**
+
+---
+
+**TECHNIQUES UTILISÉES :**
+
+${detectedTypes.includes('faux_souci') ? `
+• **Faux Souci** : "J'ai peur pour toi", "ça m'inquiète"
+→ Il fait semblant de s'inquiéter pour **saboter votre succès**.
+` : ''}${detectedTypes.includes('infantilisation') ? `
+• **Infantilisation** : "Tu es sensible", "tu n'as pas les épaules"
+→ Il vous traite comme un **enfant incapable** de décider.
+` : ''}${detectedTypes.includes('sabotage') ? `
+• **Sabotage de Succès** : "Pression monstre", "si ça craque"
+→ Au lieu de vous encourager, il **amplifie les risques**.
+` : ''}${detectedTypes.includes('dette') ? `
+• **Dette Émotionnelle** : "Je serai là pour ramasser les morceaux **comme d'habitude**"
+→ Il vous rappelle que vous lui **devez** quelque chose.
+` : ''}${detectedTypes.includes('intimite_feinte') ? `
+• **Fausse Intimité** : "Je te connais par cœur"
+→ Il utilise la proximité pour **justifier son contrôle**.
+` : ''}${detectedTypes.includes('paternalisme') ? `
+• **Paternalisme** : "Je veux te protéger"
+→ Il se place en **parent**, pas en partenaire égal.
+` : ''}
+
+---
+
+**CE QUE CE MESSAGE FAIT RÉELLEMENT :**
+1. **Sape votre confiance** au moment où vous êtes fier(e).
+2. **Vous fait douter** de votre capacité à réussir.
+3. **Crée de la culpabilité** si vous osez y aller malgré "son avis".
+
+**VÉRITÉ :**
+→ Une personne qui vous aime VRAIMENT dit : **"Je crois en toi, tu vas assurer !"**
+→ Elle ne dit PAS : "T'es trop fragile, ça va mal finir."
+
+---
+
+**RÉPONSE RECOMMANDÉE :**
+
+**Option 1 (Ferme)** :
+"Merci pour ton inquiétude, mais j'ai confiance en moi. Je prends cette opportunité."
+
+**Option 2 (Frontale)** :
+"J'ai besoin de soutien, pas de doutes. Si tu ne peux pas m'encourager, abstiens-toi."
+
+**Option 3 (Silence)** :
+Ne répondez pas. Prouvez-lui que vous pouvez réussir sans son "avis".`;
+            }
+        }
+
         // Apprentissage / Comment faire Dark Empathy
         // Ultra-permissif : détecte "apprend", "enseigne", "montre", etc. même sans "dark empathy"
         if (lower.includes('apprend') || lower.includes('enseigne') || lower.includes('montre') ||
