@@ -11,6 +11,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const apiKeyInput = document.getElementById('api-key-input');
     const welcomeScreen = document.getElementById('welcome-screen');
     const toastContainer = document.getElementById('toast-container');
+    const disclaimerModal = document.getElementById('disclaimer-modal');
+    const acceptDisclaimerBtn = document.getElementById('accept-disclaimer-btn');
+
+    // Disclaimer Logic
+    if (acceptDisclaimerBtn && disclaimerModal) {
+        acceptDisclaimerBtn.addEventListener('click', () => {
+            disclaimerModal.classList.add('hidden');
+        });
+    }
 
     // Load saved API key
     // Load saved API key or use Default

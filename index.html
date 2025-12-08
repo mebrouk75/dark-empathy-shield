@@ -233,6 +233,40 @@
             </button>
         </header>
 
+        <!-- Disclaimer Modal (Mandatory) -->
+        <div id="disclaimer-modal"
+            class="fixed inset-0 bg-black/95 z-[60] flex flex-col items-center justify-center p-6 fade-in">
+            <div class="max-w-md text-center space-y-6">
+                <div
+                    class="w-16 h-16 rounded-2xl bg-red-500/20 border border-red-500/50 flex items-center justify-center mx-auto mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        class="text-red-500">
+                        <path
+                            d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z">
+                        </path>
+                        <line x1="12" y1="9" x2="12" y2="13"></line>
+                        <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                    </svg>
+                </div>
+                <h2 class="text-2xl font-bold text-white">AVERTISSEMENT LÉGAL</h2>
+                <div
+                    class="text-muted text-sm leading-relaxed space-y-4 text-left bg-white/5 p-4 rounded-xl border border-white/10">
+                    <p>Je suis une <strong>Intelligence Artificielle</strong>, pas un avocat, ni un médecin, ni un
+                        policier.</p>
+                    <p>Mes analyses sont données à titre indicatif pour vous aider à y voir plus clair. Elles ne
+                        remplacent pas un avis professionnel.</p>
+                    <p class="text-red-400 font-bold">🚨 En cas de danger physique immédiat, contactez le 17 (Police) ou
+                        le 112.</p>
+                    <p>⚖️ En cas de doute juridique, consultez un avocat.</p>
+                </div>
+                <button id="accept-disclaimer-btn"
+                    class="w-full bg-white text-black font-bold py-4 rounded-xl hover:bg-gray-200 transition-all">
+                    J'AI COMPRIS
+                </button>
+            </div>
+        </div>
+
         <!-- Paywall Modal -->
         <div id="paywall-modal"
             class="fixed inset-0 bg-black/90 backdrop-blur-xl z-50 hidden flex-col items-center justify-center p-6 fade-in">
@@ -252,11 +286,11 @@
                         </svg>
                     </div>
 
-                    <h2 class="text-3xl font-bold text-white mb-2">Analyse Limitée</h2>
+                    <h2 class="text-3xl font-bold text-white mb-2">Mode "War Room" Verrouillé</h2>
                     <p class="text-muted text-sm leading-relaxed mb-8">
-                        Vous avez utilisé votre question gratuite.<br>
-                        Pour continuer à décrypter la manipulation et accéder aux stratégies de défense, passez à la
-                        version Pro.
+                        Vous avez atteint la limite gratuite.<br>
+                        Pour accéder aux analyses juridiques, stratégiques et aux protocoles de sécurité (War Room),
+                        passez à la version Pro.
                     </p>
 
                     <a href="https://buy.stripe.com/9B6cN57Evfrp6UKdaKa3u00" target="_blank"
@@ -362,9 +396,11 @@
                         </svg>
                     </button>
                 </div>
-                <div class="text-center mt-3">
+                <div class="text-center mt-3 space-y-1">
                     <p class="text-[10px] text-muted/60 tracking-wider uppercase font-medium">IA Sécurisée •
                         Confidentialité Totale</p>
+                    <p class="text-[10px] text-muted/40">Vos conversations ne sont pas stockées. Copiez, analysez,
+                        fermez la page, et tout disparaît.</p>
                 </div>
             </div>
         </div>
