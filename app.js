@@ -1,6 +1,38 @@
 // DARK EMPATHY - ASTRAL PRO (Hybrid Version)
 
+// Global Context State
+let currentContext = 'AMOUR';
+
+function setContext(context) {
+    currentContext = context;
+    const contextLoveBtn = document.getElementById('context-love');
+    const contextFriendBtn = document.getElementById('context-friend');
+
+    if (!contextLoveBtn || !contextFriendBtn) return;
+
+    if (context === 'AMOUR') {
+        contextLoveBtn.classList.add('bg-primary', 'text-white', 'shadow-lg', 'shadow-primary/20', 'border-primary/50');
+        contextLoveBtn.classList.remove('bg-white/5', 'text-muted', 'hover:bg-white/10', 'border-white/5');
+
+        contextFriendBtn.classList.remove('bg-primary', 'text-white', 'shadow-lg', 'shadow-primary/20', 'border-primary/50');
+        contextFriendBtn.classList.add('bg-white/5', 'text-muted', 'hover:bg-white/10', 'border-white/5');
+    } else {
+        contextFriendBtn.classList.add('bg-primary', 'text-white', 'shadow-lg', 'shadow-primary/20', 'border-primary/50');
+        contextFriendBtn.classList.remove('bg-white/5', 'text-muted', 'hover:bg-white/10', 'border-white/5');
+
+        contextLoveBtn.classList.remove('bg-primary', 'text-white', 'shadow-lg', 'shadow-primary/20', 'border-primary/50');
+        contextLoveBtn.classList.add('bg-white/5', 'text-muted', 'hover:bg-white/10', 'border-white/5');
+    }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
+    const contextLoveBtn = document.getElementById('context-love');
+    const contextFriendBtn = document.getElementById('context-friend');
+
+    if (contextLoveBtn && contextFriendBtn) {
+        contextLoveBtn.addEventListener('click', () => setContext('AMOUR'));
+        contextFriendBtn.addEventListener('click', () => setContext('AMI/PRO'));
+    }
     const chatContainer = document.getElementById('chat-container');
     const userInput = document.getElementById('user-input');
     const sendBtn = document.getElementById('send-btn');
@@ -151,32 +183,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const submitBtn = document.getElementById('submit-code-btn');
             const errorMsg = document.getElementById('code-error');
 
-            const contextLoveBtn = document.getElementById('context-love');
-            const contextFriendBtn = document.getElementById('context-friend');
-            let currentContext = 'AMOUR'; // Default
 
-            // Context Switch Logic
-            function setContext(context) {
-                currentContext = context;
-                if (context === 'AMOUR') {
-                    contextLoveBtn.classList.add('bg-primary', 'text-white', 'shadow-lg', 'shadow-primary/20', 'border-primary/50');
-                    contextLoveBtn.classList.remove('bg-white/5', 'text-muted', 'hover:bg-white/10', 'border-white/5');
-
-                    contextFriendBtn.classList.remove('bg-primary', 'text-white', 'shadow-lg', 'shadow-primary/20', 'border-primary/50');
-                    contextFriendBtn.classList.add('bg-white/5', 'text-muted', 'hover:bg-white/10', 'border-white/5');
-                } else {
-                    contextFriendBtn.classList.add('bg-primary', 'text-white', 'shadow-lg', 'shadow-primary/20', 'border-primary/50');
-                    contextFriendBtn.classList.remove('bg-white/5', 'text-muted', 'hover:bg-white/10', 'border-white/5');
-
-                    contextLoveBtn.classList.remove('bg-primary', 'text-white', 'shadow-lg', 'shadow-primary/20', 'border-primary/50');
-                    contextLoveBtn.classList.add('bg-white/5', 'text-muted', 'hover:bg-white/10', 'border-white/5');
-                }
-            }
-
-            if (contextLoveBtn && contextFriendBtn) {
-                contextLoveBtn.addEventListener('click', () => setContext('AMOUR'));
-                contextFriendBtn.addEventListener('click', () => setContext('AMI/PRO'));
-            }
 
             if (submitBtn) {
                 submitBtn.onclick = () => {
