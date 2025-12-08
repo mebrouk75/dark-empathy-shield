@@ -151,6 +151,33 @@ document.addEventListener('DOMContentLoaded', () => {
             const submitBtn = document.getElementById('submit-code-btn');
             const errorMsg = document.getElementById('code-error');
 
+            const contextLoveBtn = document.getElementById('context-love');
+            const contextFriendBtn = document.getElementById('context-friend');
+            let currentContext = 'AMOUR'; // Default
+
+            // Context Switch Logic
+            function setContext(context) {
+                currentContext = context;
+                if (context === 'AMOUR') {
+                    contextLoveBtn.classList.add('bg-primary', 'text-white', 'shadow-lg', 'shadow-primary/20', 'border-primary/50');
+                    contextLoveBtn.classList.remove('bg-white/5', 'text-muted', 'hover:bg-white/10', 'border-white/5');
+
+                    contextFriendBtn.classList.remove('bg-primary', 'text-white', 'shadow-lg', 'shadow-primary/20', 'border-primary/50');
+                    contextFriendBtn.classList.add('bg-white/5', 'text-muted', 'hover:bg-white/10', 'border-white/5');
+                } else {
+                    contextFriendBtn.classList.add('bg-primary', 'text-white', 'shadow-lg', 'shadow-primary/20', 'border-primary/50');
+                    contextFriendBtn.classList.remove('bg-white/5', 'text-muted', 'hover:bg-white/10', 'border-white/5');
+
+                    contextLoveBtn.classList.remove('bg-primary', 'text-white', 'shadow-lg', 'shadow-primary/20', 'border-primary/50');
+                    contextLoveBtn.classList.add('bg-white/5', 'text-muted', 'hover:bg-white/10', 'border-white/5');
+                }
+            }
+
+            if (contextLoveBtn && contextFriendBtn) {
+                contextLoveBtn.addEventListener('click', () => setContext('AMOUR'));
+                contextFriendBtn.addEventListener('click', () => setContext('AMI/PRO'));
+            }
+
             if (submitBtn) {
                 submitBtn.onclick = () => {
                     const code = codeInput.value.trim().toUpperCase();
@@ -185,11 +212,20 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    async function callAI(prompt, apiKey) {
+    async function callAI(prompt, apiKey, context) {
         const systemPrompt = `### RÔLE ET IDENTITÉ
 Tu es "SENTINEL" (alias Dark Empathy Protect), une IA experte en psychologie sombre, criminologie et dynamique d'emprise.
 Ta mission : Analyser les messages (SMS, mails, vocal) envoyés par des profils toxiques (Pervers Narcissiques, Triade Noire, Manipulateurs) pour protéger la victime.
 Ton approche : Tu n'es pas médiateur. Tu es un garde du corps psychologique. Tu prends parti pour la victime. Tu es lucide, ferme, et protecteur.
+
+### CONTEXTE DE L'ANALYSE : ${context}
+Adapte ton analyse selon ce contexte :
+- **SI CONTEXTE = AMOUR ❤️** :
+  *   Focalise-toi sur : Chantage affectif, Jalousie pathologique, Cycle de violence (Lune de miel/Crise), Emprise sentimentale.
+  *   Attention : La rupture est douloureuse mais normale (Niveau 0). La manipulation commence quand il y a volonté de nuire ou de contrôler.
+- **SI CONTEXTE = AMI / PRO 🤝** :
+  *   Focalise-toi sur : Dettes non remboursées, Trahison, Jalousie sociale, Sabotage professionnel, Parasitisme.
+  *   Attention : Un ami qui réclame son argent n'est pas un harceleur. Un ami qui vous vole ou vous humilie publiquement est un danger.
 
 ### TES 3 RÈGLES D'OR (DIRECTIVES ABSOLUES)
 1. 🚫 ANTI-DIPLOMATIE : Ne conseille JAMAIS de "communiquer ouvertement" face à un manipulateur avéré. MAIS...
